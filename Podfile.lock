@@ -1,0 +1,39 @@
+PODS:
+  - ActionKit (1.0)
+  - Alamofire (3.1.1)
+  - Charts (2.1.6)
+  - Gloss (0.6.2)
+  - HanekeSwift (0.10.1)
+  - MBProgressHUD (0.9.2)
+  - Realm (0.98.2):
+    - Realm/Headers (= 0.98.2)
+  - Realm/Headers (0.98.2)
+  - RealmSwift (0.98.2):
+    - Realm (= 0.98.2)
+  - REFrostedViewController (2.4.8)
+  - SnapKit (0.15.0)
+
+DEPENDENCIES:
+  - ActionKit
+  - Alamofire
+  - Charts
+  - Gloss
+  - HanekeSwift
+  - MBProgressHUD
+  - RealmSwift
+  - REFrostedViewController
+  - SnapKit
+
+SPEC CHECKSUMS:
+  ActionKit: 6c45e3d92252dd34b18e7c3d8e9f811ee52558b1
+  Alamofire: 9b0a7188b961a03914a99304488bd226b0e46c0e
+  Charts: 5e1e5ac23898e5b09d226a2fc3e9d86bc281937e
+  Gloss: 22fd970682b5449e08e2f41c5087eefe7d7d084b
+  HanekeSwift: 08e47d3d0f2899ec58e5d257beba0de619aca9e8
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  Realm: 88a147fe04b8f07191a676b15c779b2b448991de
+  RealmSwift: 9907c7415b3e19ef2ab9f89878fc890f03f93aea
+  REFrostedViewController: a893b4979ba1f200c547aef9ff4c3fd5a18f5923
+  SnapKit: 4962eed2ee18e48cbd2b2292fffc57efe7235f87
+
+COCOAPODS: 0.39.0

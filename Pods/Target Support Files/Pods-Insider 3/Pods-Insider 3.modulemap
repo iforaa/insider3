@@ -1,0 +1,6 @@
+framework module Pods_Insider_3 {
+  umbrella header "Pods-Insider 3-umbrella.h"
+
+  export *
+  module * { export * }
+}
