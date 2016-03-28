@@ -142,11 +142,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "479990954.765263"
+            timestampString = "480876911.079862"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -158,11 +158,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "479990751.730725"
+            timestampString = "480876911.079862"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -174,11 +174,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "479990780.502451"
+            timestampString = "480876911.079862"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
+            startingLineNumber = "307"
+            endingLineNumber = "307"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,17 +186,65 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Insider 3/PISectionVC.swift"
-            timestampString = "480767392.352527"
+            filePath = "Insider 3/PIVisibleSettingsVC.swift"
+            timestampString = "480869207.312389"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "viewDidLoad()"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "searchBar(_:textDidChange:)"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Insider 3/PISectionManager.swift"
+            timestampString = "480875458.541473"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "count()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Insider_3.PISectionManager.count () -&gt; Swift.Int"
+                  moduleName = "Insider 3"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/igorkuznetsov/Dropbox/Source/IOS/Insider%203/Insider%203/PISectionManager.swift"
+                  timestampString = "480875458.551052"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "102">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Insider_3.PISectionManager.(count () -&gt; Swift.Int).(closure #1)"
+                  moduleName = "Insider 3"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/igorkuznetsov/Dropbox/Source/IOS/Insider%203/Insider%203/PISectionManager.swift"
+                  timestampString = "480875458.551497"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "126"
+                  endingLineNumber = "126"
+                  offsetFromSymbolStart = "23">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

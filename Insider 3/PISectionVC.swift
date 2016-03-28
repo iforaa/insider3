@@ -20,8 +20,9 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     
 }
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
 
+    @IBOutlet weak var searchBar: UISearchBar!
 
     var sectionManager: PISectionManager!
     var settings: PISettings!
@@ -65,20 +66,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
-        
-        
-        
-        var x = 10
-        let y = x++
-        print("y = \(y)")
-        
-        
-        
-        self.selectManager(currentSection)
 
+        super.viewDidLoad()
+        self.selectManager(currentSection)
+        self.searchBar.delegate = self
+        self.searchBar.showsCancelButton = true
         
         self.progressView = PIProgressView(self.view)
         self.request()
@@ -88,10 +80,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.view.addSubview(datesAndSorts)
         datesAndSorts.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(self.view).offset(65)
-            make.leading.equalTo(self.view)
-            make.trailing.equalTo(self.view)
-            make.bottom.equalTo(self.tableView.snp_top)
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.searchBar.snp_top)
         }
+        
+        //self.searchBar.invalidateIntrinsicContentSize()
+        //self.searchBar.sizeToFit()
+        
+//        self.searchBar.snp_updateConstraints { (make) in
+//            
+//            make.left.equalTo(self.view)
+//            make.right.equalTo(self.view)
+//            
+//        }
+//        
+        
+        
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -133,6 +140,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLayoutSubviews() {
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
     }
     
     func makeSort() {
@@ -149,24 +157,38 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func openPopover(sourceView: UIView, type: PopoverType) {
         var popoverVC:UIViewController
         
-        popoverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCSort")
-        popoverVC.modalPresentationStyle = UIModalPresentationStyle.Popover
-        popoverVC.popoverPresentationController!.delegate = self
-        popoverVC.popoverPresentationController!.sourceView = sourceView
-        popoverVC.popoverPresentationController!.sourceRect = sourceView.bounds
-        popoverVC.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
+        
+        
 
         if type == .sort {
+            popoverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCSort")
             let vc:PopoverSortVC = popoverVC as! PopoverSortVC
             vc.delegate = self
             vc.settings = self.settings
+            
+            vc.modalPresentationStyle = UIModalPresentationStyle.Popover
+            vc.popoverPresentationController!.delegate = self
+            vc.popoverPresentationController!.sourceView = sourceView
+            vc.popoverPresentationController!.sourceRect = sourceView.bounds
+            vc.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
+            
             presentViewController(vc, animated: true, completion: nil)
         } else {
-            let vc:PopoverFilterVC = popoverVC as! PopoverFilterVC
+
+            let vc:PopoverFilterVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCFilter") as! PopoverFilterVC
+            vc.modalPresentationStyle = UIModalPresentationStyle.Popover
+            vc.popoverPresentationController!.delegate = self
+            vc.popoverPresentationController!.sourceView = sourceView
+            vc.popoverPresentationController!.sourceRect = sourceView.bounds
+            vc.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
             vc.delegate = self
             vc.settings = self.settings
             presentViewController(vc, animated: true, completion: nil)
         }
+        
+        
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -215,14 +237,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         } else if segue.identifier == showVisibleSettingsSegue {
             if let destination = segue.destinationViewController as? PIVisibleSettingsVC {
-                destination.manager = self.sectionManager
-                destination.manager.withSettings = false
+                destination.sectionManager = self.sectionManager
+                destination.sectionManager.withSettings = false
             }
         }
     }
 
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.None
+    }
+    
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        self.sectionManager.searchFilterText = searchText
+        self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        self.sectionManager.searchFilterText = nil
+        self.sectionManager.sort()
+        self.sectionManager.filter()
+        self.tableView.reloadData()
     }
 }
 

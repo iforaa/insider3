@@ -33,8 +33,16 @@ class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.preferredContentSize = CGSizeMake(180, 180)
+        self.preferredContentSize = CGSizeMake(180, 45 * CGFloat(self.settings.sorts.count))
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+//        self.tableView.snp_updateConstraints { (make) in
+//            make.height.equalTo(250)
+//            
+//        }
+//        self.tableView.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 0, right: 0)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -80,10 +88,10 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.preferredContentSize = CGSizeMake(270, 150)
+        
         
         if showPicker == true || self.settings?.filters.count == 1 { //в случае если фильтр в секции всего один, то сразу показываем пикер
-            
+            self.preferredContentSize = CGSizeMake(270, 150)
             self.pickerView = UIPickerView()
             self.pickerView.delegate = self
             self.pickerView.dataSource = self
@@ -115,6 +123,7 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
             }
             
         } else {
+            self.preferredContentSize = CGSizeMake(270, CGFloat((self.settings?.filters.count)!) * 45)
             self.tableView = UITableView()
             self.tableView!.delegate = self
             self.tableView?.dataSource = self
@@ -271,7 +280,6 @@ class PIDatesAndSortsView: UIView {
             self.filtersbutton.addControlEvent(.TouchUpInside, closure: {
                 self.delegate.openPopover(self.filtersbutton, type: .filter)
             })
-            self.filtersbutton.addTarget(self, action: Selector("filtersPopoverOpen"), forControlEvents: .TouchUpInside)
             self.filtersbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
             periodsScreen.addSubview(self.filtersbutton)
             

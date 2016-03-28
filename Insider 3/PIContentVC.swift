@@ -452,6 +452,11 @@ class PIContentVC: UIViewController {
         }
     }
     
+    func periodAction(period: Periods) {
+        settings.datePeriod = period
+        makeRequest()
+    }
+    
     func oneDayPeriodAction() {
         settings.datePeriod = .oneDay
         makeRequest()

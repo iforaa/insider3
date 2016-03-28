@@ -63,13 +63,24 @@ class PIControlViewFactory {
         }
     }
     
-    enum ButtonType {
+    enum ButtonType: String {
         case dayButton
         case weekButton
         case monthButton
         case yearButton
         case threeYearsButton
         case fiveYearsButton
+        
+        var description: String {
+            switch self {
+            case dayButton: return "1d"
+            case weekButton: return "1w"
+            case monthButton: return "1m"
+            case yearButton: return "1y"
+            case threeYearsButton: return "3y"
+            case fiveYearsButton: return "5y"
+            }
+        }
     }
     
     
@@ -89,26 +100,26 @@ class PIControlViewFactory {
     class func NewButton(type: ButtonType,target: AnyObject?) -> UIButton {
         let button = UIButton()
         button.setTitleColor(UIColor.blackColor(), forState:UIControlState.Normal)
+        button.setTitle(type.description, forState: UIControlState.Normal)
         
         switch type {
         case .dayButton:
-            button.setTitle("1d", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("oneDayPeriodAction"), forControlEvents: .TouchUpInside)
+            button.addTarget(target, action: #selector(PIContentVC.oneDayPeriodAction), forControlEvents: .TouchUpInside)
         case .weekButton:
-            button.setTitle("1w", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("oneWeekPeriodAction"), forControlEvents: .TouchUpInside)
+    
+            button.addTarget(target, action: #selector(PIContentVC.oneWeekPeriodAction), forControlEvents: .TouchUpInside)
         case .monthButton:
-            button.setTitle("1m", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("oneMonthPeriodAction"), forControlEvents: .TouchUpInside)
+    
+            button.addTarget(target, action: #selector(PIContentVC.oneMonthPeriodAction), forControlEvents: .TouchUpInside)
         case .yearButton:
-            button.setTitle("1y", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("oneYearPeriodAction"), forControlEvents: .TouchUpInside)
+    
+            button.addTarget(target, action: #selector(PIContentVC.oneYearPeriodAction), forControlEvents: .TouchUpInside)
         case .threeYearsButton:
-            button.setTitle("3y", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("threeYearsPeriodAction"), forControlEvents: .TouchUpInside)
+    
+            button.addTarget(target, action: #selector(PIContentVC.threeYearsPeriodAction), forControlEvents: .TouchUpInside)
         case .fiveYearsButton:
-            button.setTitle("5y", forState: UIControlState.Normal)
-            button.addTarget(target, action: Selector("fiveYearsPeriodAction"), forControlEvents: .TouchUpInside)
+    
+            button.addTarget(target, action: #selector(PIContentVC.fiveYearsPeriodAction), forControlEvents: .TouchUpInside)
         }
         
         

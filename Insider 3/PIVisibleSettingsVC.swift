@@ -8,17 +8,19 @@
 
 import UIKit
 
-class PIVisibleSettingsVC: UITableViewController {
+class PIVisibleSettingsVC: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var selectDeselectAll: UIBarButtonItem!
-    var manager:PISectionManager = PISectionManager()
+    var sectionManager:PISectionManager = PISectionManager()
 //    var section:Section?
     var isSelected: Bool = true
     
     let itemCellIdentifier = "ItemCell"
     
+    @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
+        self.searchBar.delegate = self
         super.viewDidLoad()
     }
     
@@ -36,23 +38,24 @@ class PIVisibleSettingsVC: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.manager.count()
+        return self.sectionManager.count()
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(itemCellIdentifier, forIndexPath: indexPath)
-        cell.textLabel?.text = manager.ticker(indexPath.row)
-        if manager.inExludeList(manager.getTicker(indexPath.row)) {
-            cell.accessoryType = .None
-        } else {
+        cell.textLabel?.text = self.sectionManager.ticker(indexPath.row)
+        
+        if self.sectionManager.getTicker(indexPath.row).Show == true {//self.sectionManager.inExludeList(self.sectionManager.getTicker(indexPath.row)) {
             cell.accessoryType = .Checkmark
+        } else {
+            cell.accessoryType = .None
         }
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let ticker = manager.getTicker(indexPath.row)
-        manager.switchVisibility(ticker)
+        //let ticker = self.sectionManager.getTicker(indexPath.row)
+        self.sectionManager.switchVisibility(indexPath.row)
         self.tableView.reloadData()
     }
 
@@ -66,7 +69,7 @@ class PIVisibleSettingsVC: UITableViewController {
             isSelected = true
         }
         
-        manager.switchVisibilityForAll(isSelected)
+        self.sectionManager.switchVisibilityForAll(isSelected)
         self.tableView.reloadData()
     }
     
@@ -76,7 +79,21 @@ class PIVisibleSettingsVC: UITableViewController {
     
     
     override func viewWillDisappear(animated: Bool) {
-        self.manager.withSettings = true
+        self.sectionManager.withSettings = true
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        self.sectionManager.searchFilterText = searchText
+        self.tableView.reloadData()
+        
+        if searchText.characters.count == 0 {
+            searchBar.resignFirstResponder()
+        }
+        
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 
 }

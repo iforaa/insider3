@@ -16,6 +16,7 @@ class PISectionManager {
     var tickers: [TickerModel] = []
     var fetchedTicker: TickerModel?
     var settings: PISettings!
+    var searchFilterText: String?
     
     
     init() {
@@ -55,8 +56,29 @@ class PISectionManager {
     }
     
     func excludeControl() {
+        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+            if item.Show {
+//                if let sft = self.searchFilterText {
+//                    return item.Title.lowercaseString.containsString(sft.lowercaseString)
+//                }
+                return true
+            } else {
+                return false
+            }
+        })
+//        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.Title)})
+    }
+    
+    
+    func searchFilter(searchText: String) {
         
-        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.Title)})
+        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+            if searchText.characters.count == 0 {
+                return true
+            } else {
+                return item.Title.lowercaseString.containsString(searchText.lowercaseString)
+            }
+        })
     }
     
     func filter() {
@@ -82,11 +104,11 @@ class PISectionManager {
         case .capUp:
             
             self.tickers.sortInPlace {(ticker1:TickerModel, ticker2: TickerModel) -> Bool in
-                (ticker1 as! StockTickerModel).Capitalisation < (ticker2 as! StockTickerModel).Capitalisation
+                (ticker1 as! StockTickerModel).Capitalisation > (ticker2 as! StockTickerModel).Capitalisation
             }
         case .capDown:
             self.tickers.sortInPlace {(ticker1: TickerModel, ticker2: TickerModel) -> Bool in
-                (ticker2 as! StockTickerModel).Capitalisation > (ticker2 as! StockTickerModel).Capitalisation
+                (ticker1 as! StockTickerModel).Capitalisation < (ticker2 as! StockTickerModel).Capitalisation
             }
             
         default: print("something wrong on sort")
@@ -97,9 +119,28 @@ class PISectionManager {
     
     func count() -> Int {
         if withSettings {
+            
+            if let sft = self.searchFilterText {
+                self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+                    if let sft = self.searchFilterText {
+                        return item.Title.lowercaseString.containsString(sft.lowercaseString)
+                    } else {
+                        return true
+                    }
+                })
+            }
             return self.tickers.count
         } else {
-            self.tickers = PISettingsManager.sharedInstance.settings.tickers
+            self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+                
+                if let sft = self.searchFilterText {
+                    return item.Title.lowercaseString.containsString(sft.lowercaseString)
+                } else {
+                    return true
+                }
+            
+            
+            })
             return self.tickers.count
         }
     }
@@ -108,35 +149,48 @@ class PISectionManager {
         return self.fetchedTicker!.Items.count
     }
     
-    func inExludeList(ticker: TickerModel) -> Bool {
-        
-        return PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.Title)
-    }
+//    func inExludeList(ticker: TickerModel) -> Bool {
+//        if self.tickers.filter({item in item.Show == ticker.ID}).count == 1 {
+//            return true
+//        } else {
+//            return false
+//        }
+//        return PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.Title)
+//    }
+    
+    
     
     func switchVisibilityForAll(addAll:Bool) {
-        for ticker:TickerModel in self.tickers {
-            if addAll {
-                if !inExludeList(ticker) {
-                    PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
-                }
-            } else {
-                if inExludeList(ticker) {
-                    PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
-                }
-            }
+//        
+//        PISettingsManager.sharedInstance.settings.tickers.map{ (var ticker: TickerModel) in
+//            ticker.Show = addAll
+//        }
+//
+        for var ticker:TickerModel in PISettingsManager.sharedInstance.settings.tickers {
+            ticker.Show = addAll
         }
     }
     
-    func switchVisibility(ticker: TickerModel) {
-        if ticker.Title.characters.count == 0 {
-            return
-        }
-            
-        if inExludeList(ticker) {
-            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
+    func switchVisibility(row: Int) {
+        
+        if PISettingsManager.sharedInstance.settings.tickers[row].Show {
+            PISettingsManager.sharedInstance.settings.tickers[row].Show = false
         } else {
-            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
+            PISettingsManager.sharedInstance.settings.tickers[row].Show = true
         }
+        
+        
+        
+//        if ticker.Title.characters.count == 0 {
+//            return
+//        }
+//
+//            
+//        if inExludeList(ticker) {
+//            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
+//        } else {
+//            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
+//        }
     }
 
     func ticker(row:Int) -> String {
