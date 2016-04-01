@@ -361,6 +361,7 @@ class PIMutualFundsManager:PISectionManager {
     var Minsumminvest:String {get {return String(self.Item.Minsumminvest!)}}
     var Stpaya:String {get {return String(self.Item.Stpaya!)}}
     var Scha:String {get {return String(self.Item.Scha!)}}
+    var URL:String {get {return String(self.Item.url!)}}
 
     override func requestInBackground(completion: (success: Bool) -> Void) {
         if self.tickers.count == 0 {

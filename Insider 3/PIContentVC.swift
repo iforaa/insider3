@@ -151,6 +151,16 @@ class PIContentVC: UIViewController {
             self.view.addSubview(schaLabels.0)
             self.view.addSubview(schaLabels.1)
             
+            let urlLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.url, value: mutualFundsManager.URL)
+            let linkTextView = UITextView()
+            linkTextView.dataDetectorTypes = .Link
+            linkTextView.editable = false
+            linkTextView.text = urlLabels.1.text
+            
+            
+            self.view.addSubview(urlLabels.0)
+            self.view.addSubview(linkTextView)
+            
             
             fundnameLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(changeLabels.0.snp_bottom).offset(10)
@@ -253,6 +263,18 @@ class PIContentVC: UIViewController {
             schaLabels.1.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(schaLabels.0)
                 make.leading.equalTo(schaLabels.0.snp_trailing).offset(10)
+            }
+            
+            urlLabels.0.snp_makeConstraints { (make) -> Void in
+                make.top.equalTo(schaLabels.0.snp_bottom).offset(10)
+                make.leading.equalTo(self.view).offset(10)
+            }
+            
+            linkTextView.snp_makeConstraints { (make) -> Void in
+                make.top.equalTo(urlLabels.0)
+                make.left.equalTo(urlLabels.0.snp_right).offset(10)
+                make.width.equalTo(200)
+                make.height.equalTo(40)
             }
 
 

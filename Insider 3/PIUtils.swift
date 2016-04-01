@@ -37,6 +37,7 @@ class PIControlViewFactory {
         case minsumminvest
         case stpaya
         case scha
+        case url
 
         
         var description: String {
@@ -59,6 +60,7 @@ class PIControlViewFactory {
             case minsumminvest: return "min sum invest"
             case stpaya: return "stpaya"
             case scha: return "scha"
+            case url: return "url"
             }
         }
     }
