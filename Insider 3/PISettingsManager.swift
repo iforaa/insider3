@@ -75,12 +75,17 @@ class PISettings: NSObject {
     
     enum Filters: Int {
         case stockSpec
+        
         case bondOtrasl
         case bondRating
         case bondSektor
         case bondPeriod
         case bondAmor
         case bondVidk
+        
+        case mutualFundFundType
+        case mutualFundFundCat
+        
         
         var description: String {
             switch self {
@@ -91,6 +96,8 @@ class PISettings: NSObject {
             case .bondPeriod: return "Период"
             case .bondAmor: return "Амортизация"
             case .bondVidk: return "Вид купона"
+            case .mutualFundFundType: return "Тип"
+            case .mutualFundFundCat: return "Категория"
             }
         }
     }
@@ -269,7 +276,90 @@ class PIMutualFundSettings: PISettings {
     override init() {
         super.init()
         self.datePeriod = .oneYear
+        self.selectedFilter = .mutualFundFundType
     }
+    
+    override var filters:[Filters] {
+        get { return [Filters.mutualFundFundType, Filters.mutualFundFundCat]}
+        set {}
+    }
+    
+    var fundType:FundType = .All
+    
+    enum FundType: String {
+        case All = ""
+        case Open = "открытый"
+        case Interval = "интервальный"
+
+        static let allValues = [All, Open, Interval]
+        
+        var description: String {
+            switch self {
+            case .All: return "Все"
+            case .Open: return "Открытый"
+            case .Interval: return "Интервальный"
+            }
+        }
+    }
+    
+    
+    var fundCat: FundCat = .All
+    
+    enum FundCat: String {
+        case All = ""
+        case Obligation = "облигации"
+        case Stock = "акции"
+        case Mutual = "смешанные инвестиции"
+        case IndexStock = "индексный (акций)"
+        
+        static let allValues = [All, Obligation, Stock, Mutual, IndexStock]
+        
+        var description: String {
+            switch self {
+            case .All: return "Все"
+            case .Obligation: return "Облигации"
+            case .Stock: return "Акции"
+            case .Mutual: return "Смешанные инвестиции"
+            case .IndexStock: return "Индексный (акции)"
+            }
+        }
+    }
+    
+    
+    override func descriptionFilterRow(row: Int) -> String {
+        switch selectedFilter {
+        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues[row].description
+        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues[row].description
+        default: return "error"
+        }
+    }
+    
+    override func countFilterRows() -> Int {
+        switch selectedFilter {
+        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues.count
+        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.count
+        default: print("error"); return -1
+            
+        }
+    }
+    
+    override func selectFilterRow(row: Int) {
+        switch selectedFilter {
+        case .mutualFundFundType: PISettingsManager.sharedInstance.mutualFund.fundType = PIMutualFundSettings.FundType.allValues[row]
+        case .mutualFundFundCat: PISettingsManager.sharedInstance.mutualFund.fundCat = PIMutualFundSettings.FundCat.allValues[row]
+        
+        default: print("error")
+        }
+    }
+    
+    override func selectedFilterRow() -> Int {
+        switch selectedFilter {
+        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundType)!
+        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundCat)!
+        default: print("error"); return -1
+        }
+    }
+
 }
 
 class PICurrencySettings: PISettings {

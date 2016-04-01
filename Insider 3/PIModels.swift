@@ -518,6 +518,8 @@ struct MutualFundTickerModel: Decodable, TickerModel {
     var section: Section = .mutualFundsSection
     var Show: Bool = true
     
+    let Fundtype: PIMutualFundSettings.FundType?
+    let Fundcat: PIMutualFundSettings.FundCat?
     
     
     
@@ -537,7 +539,19 @@ struct MutualFundTickerModel: Decodable, TickerModel {
         self.CurrentRate = self.realItems![0].Rate
         self.Change = self.realItems![0].Change
         self.ID = self.realItems![0].url!
-
+        
+        if let ft = self.realItems![0].Fundtype {
+            self.Fundtype = ft
+        } else {
+            self.Fundtype = .None
+        }
+        
+        if let fc = self.realItems![0].Fundcat {
+            self.Fundcat = fc
+        } else {
+            self.Fundcat = .None
+        }
+    
     }
     
 }
@@ -550,8 +564,8 @@ struct MutualFundItemModel: Decodable, ItemModel {
     
     let Fundname: String?
     let Ukname: String?
-    let Fundtype: String?
-    let Fundcat: String?
+    let Fundtype: PIMutualFundSettings.FundType?
+    let Fundcat: PIMutualFundSettings.FundCat?
     let Registrationdate: String?
     let Startformirdate: String?
     let Endformirdate: String?

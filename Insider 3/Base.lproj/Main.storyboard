@@ -102,8 +102,8 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="41" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="auK-tC-Xi6">
                                 <rect key="frame" x="0.0" y="110" width="600" height="490"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="tintColor" patternImage="7D72C047-7F8B-4874-96BD-7BF364A0367B" colorSpace="pattern"/>
-                                <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="tintColor" patternImage="6DFE963E-3F19-456B-8BDE-6AE86579AC7C" colorSpace="pattern"/>
+                                <color key="sectionIndexBackgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Ticker" showsCancelButton="YES" id="nMC-9l-epu">
                                     <rect key="frame" x="0.0" y="64" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -131,19 +131,19 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zte-l5-Zcl">
-                                                    <rect key="frame" x="161" y="11" width="98" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Change" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sFe-Ml-H7E">
+                                                    <rect key="frame" x="350" y="11" width="121" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="98" id="kBZ-ru-E39"/>
+                                                        <constraint firstAttribute="width" constant="121" id="NJJ-lR-hW5"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="PFAgoraSansPro-Regular" family="PF Agora Sans Pro" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Change" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sFe-Ml-H7E">
-                                                    <rect key="frame" x="236" y="11" width="121" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zte-l5-Zcl">
+                                                    <rect key="frame" x="244" y="10" width="98" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="121" id="NJJ-lR-hW5"/>
+                                                        <constraint firstAttribute="width" constant="98" id="kBZ-ru-E39"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="PFAgoraSansPro-Regular" family="PF Agora Sans Pro" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -281,10 +281,10 @@
             </objects>
             <point key="canvasLocation" x="504" y="-1225"/>
         </scene>
-        <!--dfgdgdfg-->
+        <!--Content-->
         <scene sceneID="uNO-Gs-TdR">
             <objects>
-                <viewController id="V0Y-Hx-GMT" customClass="PIContentVC" customModule="Insider_3" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PIContentVC" title="Content" id="V0Y-Hx-GMT" customClass="PIContentVC" customModule="Insider_3" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ol3-VR-LtP"/>
                         <viewControllerLayoutGuide type="bottom" id="JnP-lV-5Tj"/>
@@ -376,7 +376,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="7D72C047-7F8B-4874-96BD-7BF364A0367B" width="320" height="460">
+        <image name="6DFE963E-3F19-456B-8BDE-6AE86579AC7C" width="320" height="460">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -10200,7 +10200,7 @@ AAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAAFAAj80gESAAMAAAABAAEAAAEVAAMAAAABAAQAAAEWAAMA
 AAABAGYAAAEXAAQAAAAFAAj8vgEcAAMAAAABAAEAAAFSAAMAAAABAAEAAAFTAAMAAAAEAAj85odzAAcA
 AAxIAAj87gAAAAAACAAIAAgACAAB/gAAAf4AAAH+AAAB/gAAAQQAAAAACAAB/ggAA/wIAAX6CAAH+AgA
 AQABAAEAAQAADEhMaW5vAhAAAG1udHJSR0IgWFlaIAfOAAIACQAGADEAAGFjc3BNU0ZUAAAAAElFQyBz
-UkdCAAAAAAAAAAAAAAAAAAD21gABAAAAANMtSFAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+UkdCAAAAAAAAAAAAAAABAAD21gABAAAAANMtSFAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAEWNwcnQAAAFQAAAAM2Rlc2MAAAGEAAAAbHd0cHQAAAHwAAAAFGJrcHQA
 AAIEAAAAFHJYWVoAAAIYAAAAFGdYWVoAAAIsAAAAFGJYWVoAAAJAAAAAFGRtbmQAAAJUAAAAcGRtZGQA
 AALEAAAAiHZ1ZWQAAANMAAAAhnZpZXcAAAPUAAAAJGx1bWkAAAP4AAAAFG1lYXMAAAQMAAAAJHRlY2gA

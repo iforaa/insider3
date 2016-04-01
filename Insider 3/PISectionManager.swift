@@ -58,9 +58,6 @@ class PISectionManager {
     func excludeControl() {
         self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
             if item.Show {
-//                if let sft = self.searchFilterText {
-//                    return item.Title.lowercaseString.containsString(sft.lowercaseString)
-//                }
                 return true
             } else {
                 return false
@@ -266,6 +263,9 @@ class PIDashboardManager:PISectionManager {
             complition(ticker: fetchedItems)
         }
     }
+    // Экслуд контрол не должен включаться при открытия дэшборда.
+    // Иначе он наполнится тикерами
+    override func excludeControl() {}
 }
 
 class PIStocksManager:PISectionManager {
@@ -363,8 +363,8 @@ class PIMutualFundsManager:PISectionManager {
     
     var Fundname: String {get {return self.Item.Fundname!}}
     var Ukname: String {get {return self.Item.Ukname!}}
-    var Fundtype: String {get {return self.Item.Fundtype!}}
-    var Fundcat: String {get {return self.Item.Fundcat!}}
+    var Fundtype: String {get {return (self.Item.Fundtype?.description)!}}
+    var Fundcat: String {get {return (self.Item.Fundcat?.description)!}}
     var Registrationdate: String {get {return self.Item.Registrationdate!}}
     var Startformirdate: String {get {return self.Item.Startformirdate!}}
     var Endformirdate: String {get {return self.Item.Endformirdate!}}
@@ -381,21 +381,41 @@ class PIMutualFundsManager:PISectionManager {
             completion(success: true)
         }
     }
-    
+
     override func change(row: Int) -> Float {
-        let item = self.tickers[row].Items.first as! MutualFundItemModel
-        switch self.settings.datePeriod {
-        case .oneDay: self.tickers[row].Change = item.Proc_day!
-        case .oneWeek: self.tickers[row].Change = item.Proc_week!
-        case .oneMonth: self.tickers[row].Change = item.Proc_month1!
-        case .oneYear: self.tickers[row].Change = item.Proc_year1!
-        case .threeYears: self.tickers[row].Change = item.Proc_year3!
-        case .fiveYears: self.tickers[row].Change = item.Proc_year5!
-//        default: return 0.0
+        if self.tickers[row].Items.first is MutualFundItemModel {
+            let item = self.tickers[row].Items.first as! MutualFundItemModel
+            switch self.settings.datePeriod {
+                case .oneDay: self.tickers[row].Change = item.Proc_day!
+                case .oneWeek: self.tickers[row].Change = item.Proc_week!
+                case .oneMonth: self.tickers[row].Change = item.Proc_month1!
+                case .oneYear: self.tickers[row].Change = item.Proc_year1!
+                case .threeYears: self.tickers[row].Change = item.Proc_year3!
+                case .fiveYears: self.tickers[row].Change = item.Proc_year5!
+                default: return 0.0
+            }
         }
         
         return self.tickers[row].Change
         
     }
+    
+    override func filter() {
+        self.tickers = PISettingsManager.sharedInstance.settings.tickers
+        
+        self.tickers = self.tickers.filter({item in
+            if PISettingsManager.sharedInstance.mutualFund.fundType != .All {
+                return ((item as! MutualFundTickerModel).Fundtype) == PISettingsManager.sharedInstance.mutualFund.fundType
+            }
+            return true
+        }).filter({item in
+            if PISettingsManager.sharedInstance.mutualFund.fundCat != .All {
+                return ((item as! MutualFundTickerModel).Fundcat) == PISettingsManager.sharedInstance.mutualFund.fundCat
+            }
+            return true
+        })
+    }
+
+    
 
 }

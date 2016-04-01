@@ -142,7 +142,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "480876911.079862"
+            timestampString = "481038072.886507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "314"
@@ -158,7 +158,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "480876911.079862"
+            timestampString = "481038072.886507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "301"
@@ -174,7 +174,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "480876911.079862"
+            timestampString = "481038072.886507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "307"
@@ -206,11 +206,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "480875458.541473"
+            timestampString = "481036470.531897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
             landmarkName = "count()"
             landmarkType = "5">
             <Locations>
@@ -245,6 +245,38 @@
                   offsetFromSymbolStart = "23">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Insider 3/PISectionVC.swift"
+            timestampString = "481211482.944328"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "request()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Insider 3/PISectionManager.swift"
+            timestampString = "481120990.314023"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
+            landmarkName = "PIMutualFundsManager"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

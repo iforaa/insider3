@@ -26,6 +26,7 @@
 		A67DE40D1B5FEE6B001C43FE /* Insider_3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67DE40C1B5FEE6B001C43FE /* Insider_3Tests.swift */; };
 		A69FDD7E1C8462E300062BE5 /* PIProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69FDD7D1C8462E300062BE5 /* PIProgressView.swift */; };
 		A6AA36311B8784F8000AA807 /* PISwitchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AA36301B8784F8000AA807 /* PISwitchers.swift */; };
+		A6B2FFE41CAE9C7400640F0B /* PISectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B2FFE31CAE9C7400640F0B /* PISectionViewCell.swift */; };
 		A6B7DBED1C9A0EFA00CC435C /* PIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7DBEC1C9A0EFA00CC435C /* PIUtils.swift */; };
 		A6DE58761C5F857600CCA28D /* PIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DE58751C5F857600CCA28D /* PIModels.swift */; };
 		A6DE58781C61001C00CCA28D /* PIDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DE58771C61001C00CCA28D /* PIDataManager.swift */; };
@@ -68,6 +69,7 @@
 		A67DE40C1B5FEE6B001C43FE /* Insider_3Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insider_3Tests.swift; sourceTree = "<group>"; };
 		A69FDD7D1C8462E300062BE5 /* PIProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PIProgressView.swift; sourceTree = "<group>"; };
 		A6AA36301B8784F8000AA807 /* PISwitchers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PISwitchers.swift; sourceTree = "<group>"; };
+		A6B2FFE31CAE9C7400640F0B /* PISectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PISectionViewCell.swift; sourceTree = "<group>"; };
 		A6B7DBEC1C9A0EFA00CC435C /* PIUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PIUtils.swift; sourceTree = "<group>"; };
 		A6DE58751C5F857600CCA28D /* PIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PIModels.swift; sourceTree = "<group>"; };
 		A6DE58771C61001C00CCA28D /* PIDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PIDataManager.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				A623E7B41BF3715200D4ABF4 /* BallonMarker.swift */,
 				A65E99831B7A07ED00B11C4A /* REFrostedControllers */,
+				A6B2FFE31CAE9C7400640F0B /* PISectionViewCell.swift */,
 			);
 			name = Sourced;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				A6B7DBED1C9A0EFA00CC435C /* PIUtils.swift in Sources */,
 				A62943EA1BFCC63E0041CE68 /* PIGraph.swift in Sources */,
 				A6FD79541B713ACC00C454C3 /* PISettingsManager.swift in Sources */,
+				A6B2FFE41CAE9C7400640F0B /* PISectionViewCell.swift in Sources */,
 				A6AA36311B8784F8000AA807 /* PISwitchers.swift in Sources */,
 				A66D73561BECFC9C007F2350 /* PISectionManager.swift in Sources */,
 				A65E99821B78B7AE00B11C4A /* PIREFrostedVC.swift in Sources */,

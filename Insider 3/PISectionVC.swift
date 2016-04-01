@@ -31,6 +31,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     
+    let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+    
     let textCellIdentifier = "TextCell"
 
     var currentSection:Section = .stocksSection//
@@ -123,7 +125,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         
     }
-    // переписать секшен контроллер на основе протоколов
+    
     func request() {
 
         self.progressView?.show()
@@ -206,21 +208,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath) 
+//        let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath) 
         
-        if let tickerLabel = cell.viewWithTag(100) as? UILabel {
-            tickerLabel.text = self.sectionManager.ticker(indexPath.row) as String
+        var cell:PISectionViewCell? = tableView.dequeueReusableCellWithIdentifier("CELL") as? PISectionViewCell
+//        
+        if cell == nil {
+            cell = PISectionViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "CELL")
         }
-        
-        if let rateLabel = cell.viewWithTag(101) as? UILabel {
-            rateLabel.text = "\(self.sectionManager.currentRate(indexPath.row))"
-        }
-        
-        if let changeLabel = cell.viewWithTag(102) as? UILabel {
-            changeLabel.text = "\(self.sectionManager.change(indexPath.row))"
-        }
+        cell!.title.text = self.sectionManager.ticker(indexPath.row) as String
+        cell!.rate.text = "\(self.sectionManager.currentRate(indexPath.row))"
+        cell!.change.text = "\(self.sectionManager.change(indexPath.row))"
 
-        return cell
+        return cell!
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let picontentVC = mainStoryboard.instantiateViewControllerWithIdentifier("PIContentVC") as! PIContentVC
+        
+        self.sectionManager.selectedTickerNum = indexPath.row
+        picontentVC.ticker = self.sectionManager.getSelectedTicker()
+        picontentVC.manager = self.sectionManager
+        
+        self.navigationController?.pushViewController(picontentVC, animated: true)
     }
 
     let showContentSegue = "showContentSegue"
@@ -228,14 +238,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == showContentSegue {
-            if let destination = segue.destinationViewController as? PIContentVC {
-                if let tickerIndex = tableView.indexPathForSelectedRow?.row {
-                    self.sectionManager.selectedTickerNum = tickerIndex
-                    destination.ticker = self.sectionManager.getSelectedTicker()
-                    destination.manager = self.sectionManager                }
-            }
-        } else if segue.identifier == showVisibleSettingsSegue {
+        if segue.identifier == showVisibleSettingsSegue {
             if let destination = segue.destinationViewController as? PIVisibleSettingsVC {
                 destination.sectionManager = self.sectionManager
                 destination.sectionManager.withSettings = false
