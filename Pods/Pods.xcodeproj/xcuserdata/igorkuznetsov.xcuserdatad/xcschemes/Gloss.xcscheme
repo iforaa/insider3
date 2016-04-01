@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '7129D4F88C459549564727B5'
+               BlueprintIdentifier = '1C757C30C999945F8D4C2E4F'
                BlueprintName = 'Gloss'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Gloss.framework'>

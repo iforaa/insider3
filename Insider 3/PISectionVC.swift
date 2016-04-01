@@ -86,21 +86,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.searchBar.snp_top)
         }
-        
-        //self.searchBar.invalidateIntrinsicContentSize()
-        //self.searchBar.sizeToFit()
-        
-//        self.searchBar.snp_updateConstraints { (make) in
-//            
-//            make.left.equalTo(self.view)
-//            make.right.equalTo(self.view)
-//            
-//        }
-//        
-        
-        
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {

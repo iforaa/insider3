@@ -146,6 +146,7 @@ struct StockTickerModel: Decodable, TickerModel {
     var Items:[ItemModel] = []
     var realItems: [StockItemModel]?
     
+    
     let LongTicker: String?
     let ShortTicker: String?
     var Specialisation: PIStockSettings.Specialisations?

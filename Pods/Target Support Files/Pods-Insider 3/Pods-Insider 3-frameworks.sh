@@ -91,8 +91,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Insider 3/Haneke.framework"
   install_framework "Pods-Insider 3/MBProgressHUD.framework"
   install_framework "Pods-Insider 3/REFrostedViewController.framework"
-  install_framework "Pods-Insider 3/Realm.framework"
-  install_framework "Pods-Insider 3/RealmSwift.framework"
   install_framework "Pods-Insider 3/SnapKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -103,7 +101,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Insider 3/Haneke.framework"
   install_framework "Pods-Insider 3/MBProgressHUD.framework"
   install_framework "Pods-Insider 3/REFrostedViewController.framework"
-  install_framework "Pods-Insider 3/Realm.framework"
-  install_framework "Pods-Insider 3/RealmSwift.framework"
   install_framework "Pods-Insider 3/SnapKit.framework"
 fi

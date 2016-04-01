@@ -142,11 +142,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "481038072.886507"
+            timestampString = "481220782.771245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -158,11 +158,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "481038072.886507"
+            timestampString = "481220782.771245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -174,11 +174,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "481038072.886507"
+            timestampString = "481220782.771245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
             landmarkName = "filter()"
             landmarkType = "5">
          </BreakpointContent>
@@ -190,11 +190,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PIVisibleSettingsVC.swift"
-            timestampString = "480869207.312389"
+            timestampString = "481220851.166974"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "searchBar(_:textDidChange:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -254,11 +254,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionVC.swift"
-            timestampString = "481211482.944328"
+            timestampString = "481221357.619718"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "request()"
             landmarkType = "5">
          </BreakpointContent>
@@ -270,11 +270,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Insider 3/PISectionManager.swift"
-            timestampString = "481120990.314023"
+            timestampString = "481220782.771245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "360"
-            endingLineNumber = "360"
+            startingLineNumber = "350"
+            endingLineNumber = "350"
             landmarkName = "PIMutualFundsManager"
             landmarkType = "3">
          </BreakpointContent>

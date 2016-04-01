@@ -35,8 +35,20 @@ class PISettingsManager {
         
         let dashboard = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.dashboard)
         defaults.setObject(dashboard, forKey: "dashboardState")
+
         let stock = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.stock)
         defaults.setObject(stock, forKey: "stockState")
+        
+        
+        
+        
+        let excludedTickers = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.settings.excludedTickers)
+        defaults.setObject(excludedTickers, forKey: "excludedTickers")
+        
+        
+//        let zzz = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.stock)
+//        defaults.setObject(stock, forKey: "zzz")
+        
 
         
     }
@@ -46,11 +58,14 @@ class PISettingsManager {
             PISettingsManager.sharedInstance.dashboard = NSKeyedUnarchiver.unarchiveObjectWithData(dashboard) as! PIDashboardSettings
         } else {
             PISettingsManager.sharedInstance.dashboard.populateWithDefaultTickers()
-            
         }
         
         if let stock = NSUserDefaults.standardUserDefaults().objectForKey("stockState") as? NSData {
             PISettingsManager.sharedInstance.stock = NSKeyedUnarchiver.unarchiveObjectWithData(stock) as! PIStockSettings
+        }
+        
+        if let excludedTickers = NSUserDefaults.standardUserDefaults().objectForKey("excludedTickers") as? NSData {
+            PISettingsManager.sharedInstance.settings.excludedTickers = NSKeyedUnarchiver.unarchiveObjectWithData(excludedTickers) as! Set<String>
         }
         
         
@@ -146,7 +161,7 @@ class PISettings: NSObject {
     }
     
     func addItemToExludeList(itemId:String) {
-        excludedTickers.add(itemId)
+        excludedTickers.insert(itemId)
     }
     
     func removeItemFromExludeList(itemId:String) {
@@ -772,38 +787,40 @@ enum Section: String {
 
 extension NSDate: Comparable { }
 
-struct Set<T: Hashable> {
-    typealias Element = T
-    private var contents: [Element: Bool]
-    
-    init() {
-        self.contents = [Element: Bool]()
-    }
-    
-    /// The number of elements in the Set.
-    var count: Int { return contents.count }
-    
-    /// Returns `true` if the Set is empty.
-    var isEmpty: Bool { return contents.isEmpty }
-    
-    /// The elements of the Set as an array.
-    var elements: [Element] { return Array(self.contents.keys) }
-    
-    /// Returns `true` if the Set contains `element`.
-    func contains(element: Element) -> Bool {
-        return contents[element] ?? false
-    }
-    
-    /// Add `newElements` to the Set.
-    mutating func add(newElements: Element...) {
-        newElements.map { self.contents[$0] = true }
-    }
-    
-    /// Remove `element` from the Set.
-    mutating func remove(element: Element) -> Element? {
-        return contents.removeValueForKey(element) != nil ? element : nil
-    }
-}
+
+
+//struct Set<T: Hashable> {
+//    typealias Element = T
+//    private var contents: [Element: Bool]
+//    
+//    init() {
+//        self.contents = [Element: Bool]()
+//    }
+//    
+//    /// The number of elements in the Set.
+//    var count: Int { return contents.count }
+//    
+//    /// Returns `true` if the Set is empty.
+//    var isEmpty: Bool { return contents.isEmpty }
+//    
+//    /// The elements of the Set as an array.
+//    var elements: [Element] { return Array(self.contents.keys) }
+//    
+//    /// Returns `true` if the Set contains `element`.
+//    func contains(element: Element) -> Bool {
+//        return contents[element] ?? false
+//    }
+//    
+//    /// Add `newElements` to the Set.
+//    mutating func add(newElements: Element...) {
+//        newElements.map { self.contents[$0] = true }
+//    }
+//    
+//    /// Remove `element` from the Set.
+//    mutating func remove(element: Element) -> Element? {
+//        return contents.removeValueForKey(element) != nil ? element : nil
+//    }
+//}
 
 class DashboardContainer {
     var tickers = [DashboardTickerModel]()

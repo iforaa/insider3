@@ -45,10 +45,12 @@ class PIVisibleSettingsVC: UITableViewController, UISearchBarDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier(itemCellIdentifier, forIndexPath: indexPath)
         cell.textLabel?.text = self.sectionManager.ticker(indexPath.row)
         
-        if self.sectionManager.getTicker(indexPath.row).Show == true {//self.sectionManager.inExludeList(self.sectionManager.getTicker(indexPath.row)) {
-            cell.accessoryType = .Checkmark
-        } else {
+        if PISettingsManager.sharedInstance.settings.containsInExlideList(self.sectionManager.getTicker(indexPath.row).Title) {
+        //if self.sectionManager.getTicker(indexPath.row).Show == true {
             cell.accessoryType = .None
+        } else {
+            cell.accessoryType = .Checkmark
+            
         }
         return cell
     }

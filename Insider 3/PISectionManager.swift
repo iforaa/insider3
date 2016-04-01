@@ -56,14 +56,14 @@ class PISectionManager {
     }
     
     func excludeControl() {
-        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
-            if item.Show {
-                return true
-            } else {
-                return false
-            }
-        })
-//        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.Title)})
+//        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+//            if item.Show {
+//                return true
+//            } else {
+//                return false
+//            }
+//        })
+        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.Title)})
     }
     
     
@@ -163,31 +163,21 @@ class PISectionManager {
 //            ticker.Show = addAll
 //        }
 //
-        for var ticker:TickerModel in PISettingsManager.sharedInstance.settings.tickers {
-            ticker.Show = addAll
-        }
+//        for var ticker:TickerModel in PISettingsManager.sharedInstance.settings.tickers {
+//            ticker.Show = addAll
+//        }
     }
     
     func switchVisibility(row: Int) {
-        
-        if PISettingsManager.sharedInstance.settings.tickers[row].Show {
-            PISettingsManager.sharedInstance.settings.tickers[row].Show = false
+        var ticker = PISettingsManager.sharedInstance.settings.tickers[row]
+        if PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.Title) {
+            //PISettingsManager.sharedInstance.settings.tickers[row].Show = false
+            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
         } else {
-            PISettingsManager.sharedInstance.settings.tickers[row].Show = true
+            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
+            //PISettingsManager.sharedInstance.settings.tickers[row].Show = true
+            
         }
-        
-        
-        
-//        if ticker.Title.characters.count == 0 {
-//            return
-//        }
-//
-//            
-//        if inExludeList(ticker) {
-//            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
-//        } else {
-//            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
-//        }
     }
 
     func ticker(row:Int) -> String {

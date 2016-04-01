@@ -120,7 +120,9 @@
 		A6164AD21B650E7B0083E8F5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A6AA362F1B878494000AA807 /* Lib */,
+				A66D73591BF0D3B7007F2350 /* Sourced */,
+				A66D73581BF0D394007F2350 /* Models */,
+				A66D73571BF0D316007F2350 /* Managers */,
 				A6AA362E1B878486000AA807 /* VC */,
 			);
 			name = Classes;
@@ -237,16 +239,6 @@
 				A6FB01101C4418FC00865693 /* PIVisibleSettingsVC.swift */,
 			);
 			name = VC;
-			sourceTree = "<group>";
-		};
-		A6AA362F1B878494000AA807 /* Lib */ = {
-			isa = PBXGroup;
-			children = (
-				A66D73591BF0D3B7007F2350 /* Sourced */,
-				A66D73581BF0D394007F2350 /* Models */,
-				A66D73571BF0D316007F2350 /* Managers */,
-			);
-			name = Lib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
