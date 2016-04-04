@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 
-class PIContentVC: UIViewController {
+class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
     
     @IBOutlet weak var selectButton: UIBarButtonItem!
     
@@ -20,6 +20,19 @@ class PIContentVC: UIViewController {
     var settings:PISettings = PISettings()
     var pigraph:PIGraph = PIGraph()
     var changeLabels: (UILabel,UILabel)!
+    
+    
+    func request() {
+        self.manager.fetchInBackground(self.settings,ticker: self.ticker) { (changeRel) -> Void in
+            
+            self.pigraph.setDataCount(self.manager)
+            self.changeLabels.1.text = "\(self.manager.fetchedChange())%"
+        }
+    }
+    func openPopover(sourceView: UIView, type: PopoverType) {
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,27 +48,18 @@ class PIContentVC: UIViewController {
 
         self.view.addSubview(pigraph.contentView)
         
-        
-        let oneDayPer = PIControlViewFactory.NewButton(.dayButton,target:self)
-        self.view.addSubview(oneDayPer)
-        
-        let oneWeekPer = PIControlViewFactory.NewButton(.weekButton,target:self)
-        self.view.addSubview(oneWeekPer)
-        
-        let oneMonthPer = PIControlViewFactory.NewButton(.monthButton,target:self)
-        self.view.addSubview(oneMonthPer)
-        
-        let oneYearPer = PIControlViewFactory.NewButton(.yearButton,target:self)
-        self.view.addSubview(oneYearPer)
-        
-        let threeYearsPer = PIControlViewFactory.NewButton(.threeYearsButton,target:self)
-        self.view.addSubview(threeYearsPer)
-        
-        let fiveYearsPer = PIControlViewFactory.NewButton(.fiveYearsButton,target:self)
-        self.view.addSubview(fiveYearsPer)
+        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, false)
+        datesAndSorts.delegate = self
+        self.view.addSubview(datesAndSorts)
+        datesAndSorts.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(self.view).offset(65)
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(pigraph.contentView.snp_top)
+        }
         
         
-        
+    
         let rateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.rateLabel,value: "\(self.manager.currentRate(self.manager.selectedTickerNum))")
         
         self.view.addSubview(rateLabels.0)
@@ -388,50 +392,21 @@ class PIContentVC: UIViewController {
         default:
             
             pigraph.contentView.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(self.view).offset(60)
+                make.top.equalTo(self.view).offset(110)
                 make.leading.equalTo(self.view).offset(10)
                 make.trailing.equalTo(self.view).offset(-20)
                 make.bottom.equalTo(self.view).offset(-120)
                 
             }
             
-            oneDayPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(self.view).offset(10)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
-            
-            oneWeekPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(oneDayPer.snp_trailing).offset(5)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
-            
-            oneMonthPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(oneWeekPer.snp_trailing).offset(5)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
-            
-            oneYearPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(oneMonthPer.snp_trailing).offset(5)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
-            
-            threeYearsPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(oneYearPer.snp_trailing).offset(5)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
-            
-            fiveYearsPer.snp_makeConstraints { (make) -> Void in
-                make.leading.equalTo(threeYearsPer.snp_trailing).offset(5)
-                make.top.equalTo(pigraph.contentView.snp_bottom).offset(5)
-            }
             
             rateLabels.0.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(oneDayPer.snp_bottom).offset(10)
+                make.top.equalTo(pigraph.contentView.snp_bottom).offset(10)
                 make.leading.equalTo(self.view).offset(10)
             }
             
             rateLabels.1.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(oneDayPer.snp_bottom).offset(10)
+                make.top.equalTo(pigraph.contentView.snp_bottom).offset(10)
                 make.leading.equalTo(rateLabels.0.snp_trailing).offset(10)
             }
             
@@ -449,7 +424,7 @@ class PIContentVC: UIViewController {
         }
         
         
-        self.makeRequest()
+        self.request()
         
         
 
@@ -465,7 +440,7 @@ class PIContentVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
+    /*
     func makeRequest () {
         self.manager.fetchInBackground(self.settings,ticker: self.ticker) { (changeRel) -> Void in
             
@@ -508,7 +483,7 @@ class PIContentVC: UIViewController {
         settings.datePeriod = .fiveYears
         makeRequest()
     }
-    
+    */
     
     @IBAction func selectTapped(sender: UIBarButtonItem) {
         if PISettingsManager.sharedInstance.dashboard.containsInDashboard(self.ticker) {

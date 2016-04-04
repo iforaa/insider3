@@ -37,14 +37,6 @@ class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegat
         
     }
     
-    override func viewDidLayoutSubviews() {
-//        self.tableView.snp_updateConstraints { (make) in
-//            make.height.equalTo(250)
-//            
-//        }
-//        self.tableView.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 0, right: 0)
-    }
-    
     override func viewWillAppear(animated: Bool) {
 
     }
@@ -148,8 +140,7 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath)
         
-        cell.textLabel?.text = self.settings?.filters[indexPath.row].description//self.settings.sorts[indexPath.row].description
-
+        cell.textLabel?.text = self.settings?.filters[indexPath.row].description
         return cell
     }
     
@@ -189,19 +180,27 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
 }
 
 class PIDatesAndSortsView: UIView {
-    var sectionManager:PISectionManager!
 
+    var settings: PISettings!
     var delegate:PIDatesAndSortsViewDelegate! = nil
+    
     let periodsScreen = UIView()
-
     let sortsbutton = UIButton()
     let filtersbutton = UIButton()
     let fontSize:CGFloat = 14.0
     
-    init(frame: CGRect, sectionManager: PISectionManager) {
-        super.init(frame: frame)
+    var oneDayPer: UIButton!
+    var oneWeekPer: UIButton!
+    var oneMonthPer: UIButton!
+    var oneYearPer: UIButton!
+    var threeYearsPer: UIButton!
+    var fiveYearsPer: UIButton!
+    
+    
+    init(settings: PISettings, _ sortAndFilterButtonsActivated: Bool) {
+        super.init(frame: CGRectZero)
+        self.settings = settings
         
-        self.sectionManager = sectionManager
         
         periodsScreen.backgroundColor = UIColor.redColor()
         self.addSubview(periodsScreen)
@@ -212,7 +211,7 @@ class PIDatesAndSortsView: UIView {
             make.width.equalTo(self)
         }
         
-        let oneDayPer = self.dateButton("1d", period: .oneDay)
+        oneDayPer = self.dateButton("1d", period: .oneDay)
         periodsScreen.addSubview(oneDayPer)
         
         oneDayPer.snp_makeConstraints { (make) -> Void in
@@ -220,7 +219,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        let oneWeekPer = self.dateButton("1w", period: .oneWeek)
+        oneWeekPer = self.dateButton("1w", period: .oneWeek)
         periodsScreen.addSubview(oneWeekPer)
         
         oneWeekPer.snp_makeConstraints { (make) -> Void in
@@ -228,7 +227,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        let oneMonthPer = self.dateButton("1m", period: .oneMonth)
+        oneMonthPer = self.dateButton("1m", period: .oneMonth)
         periodsScreen.addSubview(oneMonthPer)
         
         oneMonthPer.snp_makeConstraints { (make) -> Void in
@@ -236,7 +235,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        let oneYearPer = self.dateButton("1y", period: .oneYear)
+        oneYearPer = self.dateButton("1y", period: .oneYear)
         periodsScreen.addSubview(oneYearPer)
         
         oneYearPer.snp_makeConstraints { (make) -> Void in
@@ -244,7 +243,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        let threeYearsPer = self.dateButton("3y", period: .threeYears)
+        threeYearsPer = self.dateButton("3y", period: .threeYears)
         periodsScreen.addSubview(threeYearsPer)
         
         threeYearsPer.snp_makeConstraints { (make) -> Void in
@@ -252,52 +251,79 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        let fiveYearsPer = self.dateButton("5y", period: .fiveYears)
+        fiveYearsPer = self.dateButton("5y", period: .fiveYears)
         periodsScreen.addSubview(fiveYearsPer)
         
         fiveYearsPer.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(threeYearsPer.snp_right).offset(4)
             make.top.equalTo(periodsScreen).offset(5)
         }
-
-
-        self.sortsbutton.setTitle("Sort", forState: UIControlState.Normal)
-        self.sortsbutton.addControlEvent(.TouchUpInside, closure: {
-            self.delegate.openPopover(self.sortsbutton, type: .sort)
-        })
-        self.sortsbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
-        periodsScreen.addSubview(self.sortsbutton)
         
+        self.selectedButtonController()
         
-        self.sortsbutton.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(fiveYearsPer.snp_right).offset(6)
-            make.top.equalTo(periodsScreen).offset(5)
-        }
-        
-        
-        if self.sectionManager.settings.filters.count > 0 {
-            self.filtersbutton.setTitle("Filter", forState: UIControlState.Normal)
-            self.filtersbutton.addControlEvent(.TouchUpInside, closure: {
-                self.delegate.openPopover(self.filtersbutton, type: .filter)
+        if sortAndFilterButtonsActivated {
+            self.sortsbutton.setTitle("Sort", forState: UIControlState.Normal)
+            self.sortsbutton.addControlEvent(.TouchUpInside, closure: {
+                self.delegate.openPopover(self.sortsbutton, type: .sort)
             })
-            self.filtersbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
-            periodsScreen.addSubview(self.filtersbutton)
+            self.sortsbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
+            periodsScreen.addSubview(self.sortsbutton)
             
             
-            self.filtersbutton.snp_makeConstraints { (make) -> Void in
-                make.left.equalTo(self.sortsbutton.snp_right).offset(6)
+            self.sortsbutton.snp_makeConstraints { (make) -> Void in
+                make.left.equalTo(fiveYearsPer.snp_right).offset(6)
                 make.top.equalTo(periodsScreen).offset(5)
+            }
+            
+            if self.settings.filters.count > 0 {
+                self.filtersbutton.setTitle("Filter", forState: UIControlState.Normal)
+                self.filtersbutton.addControlEvent(.TouchUpInside, closure: {
+                    self.delegate.openPopover(self.filtersbutton, type: .filter)
+                })
+                self.filtersbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
+                periodsScreen.addSubview(self.filtersbutton)
+                
+                
+                self.filtersbutton.snp_makeConstraints { (make) -> Void in
+                    make.left.equalTo(self.sortsbutton.snp_right).offset(6)
+                    make.top.equalTo(periodsScreen).offset(5)
+                }
             }
         }
     }
+    
+    func selectedButtonController() {
+        oneDayPer.backgroundColor = UIColor.redColor()
+        oneWeekPer.backgroundColor = UIColor.redColor()
+        oneMonthPer.backgroundColor = UIColor.redColor()
+        oneYearPer.backgroundColor = UIColor.redColor()
+        threeYearsPer.backgroundColor = UIColor.redColor()
+        fiveYearsPer.backgroundColor = UIColor.redColor()
+            
+        switch self.settings.datePeriod {
+        case .oneDay:
+            oneDayPer.backgroundColor = UIColor.blackColor()
+        case .oneWeek:
+            oneWeekPer.backgroundColor = UIColor.blackColor()
+        case .oneMonth:
+            oneMonthPer.backgroundColor = UIColor.blackColor()
+        case .oneYear:
+            oneYearPer.backgroundColor = UIColor.blackColor()
+        case .threeYears:
+            threeYearsPer.backgroundColor = UIColor.blackColor()
+        case .fiveYears:
+            fiveYearsPer.backgroundColor = UIColor.blackColor()
+        }
+    }
+    
     
     func dateButton(title: String, period: Periods) -> UIButton {
         let button = UIButton()
         button.setTitle(title, forState: UIControlState.Normal)
         button.addControlEvent(.TouchUpInside, closure: {
-            self.sectionManager.settings.datePeriod = period
-            print(self.sectionManager.settings.datePeriod)
+            self.settings.datePeriod = period
             self.delegate.request()
+            self.selectedButtonController()
         })
         button.titleLabel?.font = UIFont.systemFontOfSize(fontSize)
         return button

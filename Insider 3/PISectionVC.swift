@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.progressView = PIProgressView(self.view)
         self.request()
         
-        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(frame: CGRectNull, sectionManager: self.sectionManager)
+        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, true)
         datesAndSorts.delegate = self
         self.view.addSubview(datesAndSorts)
         datesAndSorts.snp_makeConstraints { (make) -> Void in
@@ -214,6 +214,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.sectionManager.selectedTickerNum = indexPath.row
         picontentVC.ticker = self.sectionManager.getSelectedTicker()
         picontentVC.manager = self.sectionManager
+        picontentVC.settings = self.settings
         
         self.navigationController?.pushViewController(picontentVC, animated: true)
     }
@@ -227,6 +228,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             if let destination = segue.destinationViewController as? PIVisibleSettingsVC {
                 destination.sectionManager = self.sectionManager
                 destination.sectionManager.withSettings = false
+                
             }
         }
     }

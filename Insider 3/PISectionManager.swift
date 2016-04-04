@@ -268,6 +268,12 @@ class PIStocksManager:PISectionManager {
         } else {
             self.tickers = self.tickers.filter({item in ((item as! StockTickerModel).Specialisation) == PISettingsManager.sharedInstance.stock.specialisation})
         }
+        
+        
+        // этот фильтр должен быть перенесен на бэкэнд
+        self.tickers = self.tickers.filter { (item) -> Bool in
+            !item.Title.lowercaseString.containsString("пиф")
+        }
     }
     
 }

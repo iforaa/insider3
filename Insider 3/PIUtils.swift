@@ -99,37 +99,6 @@ class PIControlViewFactory {
         
     }
     
-    class func NewButton(type: ButtonType,target: AnyObject?) -> UIButton {
-        let button = UIButton()
-        button.setTitleColor(UIColor.blackColor(), forState:UIControlState.Normal)
-        button.setTitle(type.description, forState: UIControlState.Normal)
-        
-        switch type {
-        case .dayButton:
-            button.addTarget(target, action: #selector(PIContentVC.oneDayPeriodAction), forControlEvents: .TouchUpInside)
-        case .weekButton:
-    
-            button.addTarget(target, action: #selector(PIContentVC.oneWeekPeriodAction), forControlEvents: .TouchUpInside)
-        case .monthButton:
-    
-            button.addTarget(target, action: #selector(PIContentVC.oneMonthPeriodAction), forControlEvents: .TouchUpInside)
-        case .yearButton:
-    
-            button.addTarget(target, action: #selector(PIContentVC.oneYearPeriodAction), forControlEvents: .TouchUpInside)
-        case .threeYearsButton:
-    
-            button.addTarget(target, action: #selector(PIContentVC.threeYearsPeriodAction), forControlEvents: .TouchUpInside)
-        case .fiveYearsButton:
-    
-            button.addTarget(target, action: #selector(PIContentVC.fiveYearsPeriodAction), forControlEvents: .TouchUpInside)
-        }
-        
-        
-        return button
-        
-    }
-    
-    
 }
 
 public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
