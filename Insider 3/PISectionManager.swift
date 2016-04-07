@@ -11,7 +11,7 @@ import Foundation
 
 
 class PISectionManager {
-    var section:Section = .stocksSection
+    //var section:Section = .stocksSection
 
     var tickers: [TickerModel] = []
     var fetchedTicker: TickerModel?
@@ -32,9 +32,10 @@ class PISectionManager {
     }
     
     func requestInBackground(completion: (success: Bool) -> Void) {
-        
-        let dates = (settings.dateFrom(),settings.dateTill())
-        PIDataManager().requestSection(self.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
+        self.tickers = []
+        PISettingsManager.sharedInstance.settings.tickers = []
+        let dates = (settings.dateFrom(settings.datePeriod),settings.dateTill())
+        PIDataManager().requestSection(self.settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
             
             PISettingsManager.sharedInstance.settings.tickers = result
             self.tickers = PISettingsManager.sharedInstance.settings.applyExcludeListAtTickers(result)
@@ -49,21 +50,14 @@ class PISectionManager {
     
     func fetchInBackground(settings:PISettings,ticker: TickerModel,complition: (changeRel:Float) -> Void) {
 
-        PIDataManager().fetchTicker(ticker.section, dateFrom: settings.dateFrom(), dateTill: settings.dateTill(), ticker: ticker.Key) { (fetchedItems) -> Void in
+        PIDataManager().fetchTicker(ticker.section, dateFrom: settings.dateFrom(settings.datePeriod), dateTill: settings.dateTill(), ticker: ticker.Key) { (fetchedItems) -> Void in
             self.fetchedTicker = fetchedItems
             complition(changeRel:(self.fetchedTicker?.Change)!)
         }
     }
     
     func excludeControl() {
-//        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
-//            if item.Show {
-//                return true
-//            } else {
-//                return false
-//            }
-//        })
-        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.Title)})
+        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.ID)})
     }
     
     
@@ -107,11 +101,7 @@ class PISectionManager {
             self.tickers.sortInPlace {(ticker1: TickerModel, ticker2: TickerModel) -> Bool in
                 (ticker1 as! StockTickerModel).Capitalisation < (ticker2 as! StockTickerModel).Capitalisation
             }
-            
-        default: print("something wrong on sort")
         }
-        
-
     }
     
     func count() -> Int {
@@ -119,25 +109,16 @@ class PISectionManager {
             
             if let sft = self.searchFilterText {
                 self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
-                    if let sft = self.searchFilterText {
-                        return item.Title.lowercaseString.containsString(sft.lowercaseString)
-                    } else {
-                        return true
-                    }
+                    return item.Title.lowercaseString.containsString(sft.lowercaseString)
                 })
             }
             return self.tickers.count
         } else {
-            self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
-                
-                if let sft = self.searchFilterText {
+            if let sft = self.searchFilterText {
+                self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
                     return item.Title.lowercaseString.containsString(sft.lowercaseString)
-                } else {
-                    return true
-                }
-            
-            
-            })
+                })
+            }
             return self.tickers.count
         }
     }
@@ -146,37 +127,17 @@ class PISectionManager {
         return self.fetchedTicker!.Items.count
     }
     
-//    func inExludeList(ticker: TickerModel) -> Bool {
-//        if self.tickers.filter({item in item.Show == ticker.ID}).count == 1 {
-//            return true
-//        } else {
-//            return false
-//        }
-//        return PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.Title)
-//    }
-    
-    
-    
     func switchVisibilityForAll(addAll:Bool) {
-//        
-//        PISettingsManager.sharedInstance.settings.tickers.map{ (var ticker: TickerModel) in
-//            ticker.Show = addAll
-//        }
-//
-//        for var ticker:TickerModel in PISettingsManager.sharedInstance.settings.tickers {
-//            ticker.Show = addAll
-//        }
+
+        
     }
     
     func switchVisibility(row: Int) {
         var ticker = PISettingsManager.sharedInstance.settings.tickers[row]
-        if PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.Title) {
-            //PISettingsManager.sharedInstance.settings.tickers[row].Show = false
-            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.Title)
+        if PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.ID) {
+            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.ID)
         } else {
-            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.Title)
-            //PISettingsManager.sharedInstance.settings.tickers[row].Show = true
-            
+            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.ID)
         }
     }
 
@@ -220,7 +181,6 @@ class PISectionManager {
 
 
 class PIDashboardManager:PISectionManager {
-    
     override func requestInBackground(completion: (success: Bool) -> Void) {
         
         self.tickers = []
@@ -244,7 +204,7 @@ class PIDashboardManager:PISectionManager {
         
         var dateFrom:NSString,dateTill:NSString
 
-        dateFrom = PISettingsManager.sharedInstance.dashboard.dateFrom()
+        dateFrom = PISettingsManager.sharedInstance.dashboard.dateFrom(PISettingsManager.sharedInstance.dashboard.datePeriod)
         dateTill = PISettingsManager.sharedInstance.dashboard.dateTill()
         
         let dataManager = PIDataManager()
@@ -253,13 +213,12 @@ class PIDashboardManager:PISectionManager {
             complition(ticker: fetchedItems)
         }
     }
-    // Экслуд контрол не должен включаться при открытия дэшборда.
-    // Иначе он наполнится тикерами
+    
+    // excludeControl must not be called in dashboard, to avoid to fill it by tickers
     override func excludeControl() {}
 }
 
 class PIStocksManager:PISectionManager {
-
     override func filter() {
         self.tickers = PISettingsManager.sharedInstance.settings.tickers
         
@@ -275,12 +234,13 @@ class PIStocksManager:PISectionManager {
             !item.Title.lowercaseString.containsString("пиф")
         }
     }
-    
 }
 
-class PICurrenciesManager: PISectionManager {}
+class PICurrenciesManager: PISectionManager {
+}
 
-class PIRealEstatesManager:PISectionManager {}
+class PIRealEstatesManager: PISectionManager {
+}
 
 class PIBondsManager:PISectionManager {
     private var Item:BondItemModel {
@@ -288,41 +248,42 @@ class PIBondsManager:PISectionManager {
             return self.tickers[self.selectedTickerNum!].Items.first as! BondItemModel
         }
     }
-    var maturityDate:String {get{return self.Item.MaturityDate!}}
-    var yield:String {get{return String(self.Item.Yield!)}}
-    var dayValue:String {get{return String(self.Item.DayValue!)}}
-    var coupon:String {get{return self.Item.coupon!}}
+    
+    var maturityDate:String {return self.Item.MaturityDate!}
+    var yield:String {return String(self.Item.Yield!)}
+    var dayValue:String {return String(self.Item.DayValue!)}
+    var coupon:String {return self.Item.coupon!}
     
     override func filter() {
         self.tickers = PISettingsManager.sharedInstance.settings.tickers
 
         self.tickers = self.tickers.filter({item in
-            if PISettingsManager.sharedInstance.bond.otrasl != .all {
+            if PISettingsManager.sharedInstance.bond.otrasl != .All {
                 return ((item as! BondTickerModel).Otrasl) == PISettingsManager.sharedInstance.bond.otrasl
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.sektor != .all {
+            if PISettingsManager.sharedInstance.bond.sektor != .All {
                 return ((item as! BondTickerModel).Sektor) == PISettingsManager.sharedInstance.bond.sektor
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.rating != .all {
+            if PISettingsManager.sharedInstance.bond.rating != .All {
                 return ((item as! BondTickerModel).Rating) == PISettingsManager.sharedInstance.bond.rating
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.period != .all {
+            if PISettingsManager.sharedInstance.bond.period != .All {
                 return ((item as! BondTickerModel).Period) == PISettingsManager.sharedInstance.bond.period
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.amorticac != .all {
-                return ((item as! BondTickerModel).Amorticac) == PISettingsManager.sharedInstance.bond.amorticac
+            if PISettingsManager.sharedInstance.bond.amortizac != .All {
+                return ((item as! BondTickerModel).Amorticac) == PISettingsManager.sharedInstance.bond.amortizac
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.vidkupona != .all {
+            if PISettingsManager.sharedInstance.bond.vidkupona != .All {
                 return ((item as! BondTickerModel).Vidkupona) == PISettingsManager.sharedInstance.bond.vidkupona
             }
             return true
@@ -331,10 +292,11 @@ class PIBondsManager:PISectionManager {
     
 }
 
-class PIIndicesManager: PISectionManager { // Соединяем мировые и российские индексы
+class PIIndicesManager: PISectionManager { // combine WorldIndices with RusIndices
+    
     override func requestInBackground(completion: (success: Bool) -> Void) {
         
-        let dates = (settings.dateFrom(),settings.dateTill())
+        let dates = (settings.dateFrom(settings.datePeriod),settings.dateTill())
         PIDataManager().requestSection(.worldIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultWorldIndices) -> Void in
             
             PISettingsManager.sharedInstance.settings.tickers = resultWorldIndices
@@ -357,22 +319,34 @@ class PIMutualFundsManager:PISectionManager {
         }
     }
     
-    var Fundname: String {get {return self.Item.Fundname!}}
-    var Ukname: String {get {return self.Item.Ukname!}}
-    var Fundtype: String {get {return (self.Item.Fundtype?.description)!}}
-    var Fundcat: String {get {return (self.Item.Fundcat?.description)!}}
-    var Registrationdate: String {get {return self.Item.Registrationdate!}}
-    var Startformirdate: String {get {return self.Item.Startformirdate!}}
-    var Endformirdate: String {get {return self.Item.Endformirdate!}}
-    var Minsumminvest:String {get {return String(self.Item.Minsumminvest!)}}
-    var Stpaya:String {get {return String(self.Item.Stpaya!)}}
-    var Scha:String {get {return String(self.Item.Scha!)}}
-    var URL:String {get {return String(self.Item.url!)}}
+    var Fundname: String {return self.Item.Fundname!}
+    var Ukname: String {return self.Item.Ukname!}
+    var Fundtype: String {return (self.Item.Fundtype?.description)!}
+    var Fundcat: String {return (self.Item.Fundcat?.description)!}
+    var Registrationdate: String {return self.Item.Registrationdate!}
+    var Startformirdate: String {return self.Item.Startformirdate!}
+    var Endformirdate: String {return self.Item.Endformirdate!}
+    var Minsumminvest:String {return String(self.Item.Minsumminvest!)}
+    var Stpaya:String {return String(self.Item.Stpaya!)}
+    var Scha:String {return String(self.Item.Scha!)}
+    var URL:String {return String(self.Item.url!)}
 
     override func requestInBackground(completion: (success: Bool) -> Void) {
         if self.tickers.count == 0 {
-            super.requestInBackground({ (success) -> Void in
-                completion(success: success)
+            
+            self.tickers = []
+            PISettingsManager.sharedInstance.settings.tickers = []
+            let dates = (settings.dateFrom(.oneMonth),settings.dateTill())
+            PIDataManager().requestSection(self.settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
+                
+                PISettingsManager.sharedInstance.settings.tickers = result
+                self.tickers = PISettingsManager.sharedInstance.settings.applyExcludeListAtTickers(result)
+                
+                self.filter()
+                self.sort()
+                
+                completion(success: true)
+                
             })
         } else {
             completion(success: true)
@@ -389,12 +363,10 @@ class PIMutualFundsManager:PISectionManager {
                 case .oneYear: self.tickers[row].Change = item.Proc_year1!
                 case .threeYears: self.tickers[row].Change = item.Proc_year3!
                 case .fiveYears: self.tickers[row].Change = item.Proc_year5!
-                default: return 0.0
             }
         }
         
         return self.tickers[row].Change
-        
     }
     
     override func filter() {

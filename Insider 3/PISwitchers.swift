@@ -17,6 +17,7 @@ protocol PIPopoverSortDelegate {
 
 protocol PIPopoverFilterDelegate {
     func makeFilter()
+    func openPopover(popover: PopoverFilterVC)
 }
 
 protocol PIDatesAndSortsViewDelegate {
@@ -147,14 +148,22 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.settings!.selectedFilter = (self.settings?.filters[indexPath.row])!
-        let popoverViewController:PopoverFilterVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCFilter") as! PopoverFilterVC
-        popoverViewController.showPicker = true
-        popoverViewController.settings = self.settings
-        popoverViewController.delegate = self.delegate
         
-        presentViewController(popoverViewController, animated: true, completion: {
-
-        })
+        let popover:PopoverFilterVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCFilter") as! PopoverFilterVC
+        
+        popover.modalPresentationStyle = UIModalPresentationStyle.Popover
+        popover.popoverPresentationController!.delegate = self.popoverPresentationController!.delegate
+        popover.popoverPresentationController!.sourceView = self.popoverPresentationController!.sourceView
+        popover.popoverPresentationController!.sourceRect = self.popoverPresentationController!.sourceView!.bounds
+        popover.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
+        popover.showPicker = true
+        popover.settings = self.settings
+        popover.delegate = self.delegate
+        
+        self.delegate.openPopover(popover)
+        
+        
+        
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
@@ -330,6 +339,9 @@ class PIDatesAndSortsView: UIView {
     }
 
 
+    func deactivate() {
+        self.alpha = 0
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

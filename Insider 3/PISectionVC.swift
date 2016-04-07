@@ -20,62 +20,27 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     
 }
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var sectionManager: PISectionManager!
-    var settings: PISettings!
+    var settings: PISettings = PISettingsManager.sharedInstance.stock
+    var sectionManager: PISectionManager = PIStocksManager()
     var progressView:PIProgressView?
 
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-    
     let textCellIdentifier = "TextCell"
 
-    var currentSection:Section = .stocksSection//
-
-    func selectManager(section:Section) {
-        switch(section) {
-        case .dashboard:
-            self.settingsButton.enabled = false
-            self.sectionManager = PIDashboardManager()
-            self.settings = PISettingsManager.sharedInstance.dashboard
-        case .stocksSection:
-            self.sectionManager = PIStocksManager()
-            self.settings = PISettingsManager.sharedInstance.stock
-        case .currenciesSection:
-            self.sectionManager = PICurrenciesManager()
-            self.settings = PISettingsManager.sharedInstance.currency
-        case .bondsSection:
-            self.sectionManager = PIBondsManager()
-            self.settings = PISettingsManager.sharedInstance.bond
-        case .realEstatesSection:
-            self.sectionManager = PIRealEstatesManager()
-            self.settings = PISettingsManager.sharedInstance.realEstate
-        case .indicesSection:
-            self.sectionManager = PIIndicesManager()
-            self.settings = PISettingsManager.sharedInstance.indices
-        case .mutualFundsSection:
-            self.sectionManager = PIMutualFundsManager()
-            self.settings = PISettingsManager.sharedInstance.mutualFund
-        default: print("Error in SectionVC")
-        }
-        self.sectionManager.section = section
-        self.sectionManager.settings = self.settings
-    }
     
     override func viewDidLoad() {
 
         super.viewDidLoad()
-        self.selectManager(currentSection)
         self.searchBar.delegate = self
         self.searchBar.showsCancelButton = true
-        
         self.progressView = PIProgressView(self.view)
-        self.request()
         
         let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, true)
         datesAndSorts.delegate = self
@@ -86,16 +51,30 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.searchBar.snp_top)
         }
+        
+        
+        
     }
+    
+    
+    func request() {
+        self.progressView?.show()
+        self.sectionManager.requestInBackground() { (success) -> Void in
+            if (success) {
+                self.progressView?.hide()
+                self.sectionManager.excludeControl()
+                self.tableView.reloadData()
+            } else {
+                self.progressView?.hideWithError()
+            }
+        }
+    }
+    
     
     override func viewWillAppear(animated: Bool) {
-        self.sectionManager.excludeControl()
-        self.tableView.reloadData()
-    }
-    
-    func prepareForSection(section: Section) {
-        self.currentSection = section
-
+        self.sectionManager.settings = self.settings
+        self.request()
+        
     }
     
     
@@ -111,20 +90,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
-    func request() {
 
-        self.progressView?.show()
-        self.sectionManager.requestInBackground() { (success) -> Void in
-            if (success) {
-                self.progressView?.hide()
-                self.sectionManager.excludeControl()
-                self.tableView.reloadData()
-            } else {
-                self.progressView?.hideWithError()
-            }
-        }
-    }
-    
     override func viewDidLayoutSubviews() {
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
@@ -143,15 +109,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func openPopover(sourceView: UIView, type: PopoverType) {
         var popoverVC:UIViewController
-        
-        
-        
 
         if type == .sort {
             popoverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCSort")
             let vc:PopoverSortVC = popoverVC as! PopoverSortVC
             vc.delegate = self
-            vc.settings = self.settings
+            vc.settings = self.sectionManager.settings
             
             vc.modalPresentationStyle = UIModalPresentationStyle.Popover
             vc.popoverPresentationController!.delegate = self
@@ -169,14 +132,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             vc.popoverPresentationController!.sourceRect = sourceView.bounds
             vc.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
             vc.delegate = self
-            vc.settings = self.settings
+            vc.settings = self.sectionManager.settings
             presentViewController(vc, animated: true, completion: nil)
+            
+            
         }
-        
-        
-        
+
+    }
+    
+    func openPopover(popover: PopoverFilterVC) {
+        self.dismissViewControllerAnimated(true, completion: {
+            self.presentViewController(popover, animated: true, completion: nil)
+        })
         
     }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -193,10 +164,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath) 
-        
         var cell:PISectionViewCell? = tableView.dequeueReusableCellWithIdentifier("CELL") as? PISectionViewCell
-//        
+        
         if cell == nil {
             cell = PISectionViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "CELL")
         }
@@ -214,7 +183,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.sectionManager.selectedTickerNum = indexPath.row
         picontentVC.ticker = self.sectionManager.getSelectedTicker()
         picontentVC.manager = self.sectionManager
-        picontentVC.settings = self.settings
         
         self.navigationController?.pushViewController(picontentVC, animated: true)
     }

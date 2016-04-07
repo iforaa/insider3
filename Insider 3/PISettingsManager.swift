@@ -39,15 +39,27 @@ class PISettingsManager {
         let stock = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.stock)
         defaults.setObject(stock, forKey: "stockState")
         
+        let currency = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.currency)
+        defaults.setObject(currency, forKey: "currencyState")
+        
+        let realEstate = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.realEstate)
+        defaults.setObject(realEstate, forKey: "realEstateState")
+        
+        let bond = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.bond)
+        defaults.setObject(bond, forKey: "bondState")
+        
+        let indices = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.indices)
+        defaults.setObject(indices, forKey: "indicesState")
+        
+        let mutualFund = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.mutualFund)
+        defaults.setObject(mutualFund, forKey: "mutualFundState")
+        
         
         
         
         let excludedTickers = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.settings.excludedTickers)
         defaults.setObject(excludedTickers, forKey: "excludedTickers")
         
-        
-//        let zzz = NSKeyedArchiver.archivedDataWithRootObject(PISettingsManager.sharedInstance.stock)
-//        defaults.setObject(stock, forKey: "zzz")
         
 
         
@@ -63,6 +75,27 @@ class PISettingsManager {
         if let stock = NSUserDefaults.standardUserDefaults().objectForKey("stockState") as? NSData {
             PISettingsManager.sharedInstance.stock = NSKeyedUnarchiver.unarchiveObjectWithData(stock) as! PIStockSettings
         }
+        
+        if let currency = NSUserDefaults.standardUserDefaults().objectForKey("currencyState") as? NSData {
+            PISettingsManager.sharedInstance.currency = NSKeyedUnarchiver.unarchiveObjectWithData(currency) as! PICurrencySettings
+        }
+        
+        if let realEstate = NSUserDefaults.standardUserDefaults().objectForKey("realEstateState") as? NSData {
+            PISettingsManager.sharedInstance.realEstate = NSKeyedUnarchiver.unarchiveObjectWithData(realEstate) as! PIRealEstateSettings
+        }
+        
+        if let bond = NSUserDefaults.standardUserDefaults().objectForKey("bondState") as? NSData {
+            PISettingsManager.sharedInstance.bond = NSKeyedUnarchiver.unarchiveObjectWithData(bond) as! PIBondSettings
+        }
+        
+        if let indices = NSUserDefaults.standardUserDefaults().objectForKey("indicesState") as? NSData {
+            PISettingsManager.sharedInstance.indices = NSKeyedUnarchiver.unarchiveObjectWithData(indices) as! PIIndicesSettings
+        }
+        
+        if let mutualFund = NSUserDefaults.standardUserDefaults().objectForKey("mutualFundState") as? NSData {
+            PISettingsManager.sharedInstance.mutualFund = NSKeyedUnarchiver.unarchiveObjectWithData(mutualFund) as! PIMutualFundSettings
+        }
+        
         
         if let excludedTickers = NSUserDefaults.standardUserDefaults().objectForKey("excludedTickers") as? NSData {
             PISettingsManager.sharedInstance.settings.excludedTickers = NSKeyedUnarchiver.unarchiveObjectWithData(excludedTickers) as! Set<String>
@@ -86,7 +119,7 @@ class PISettings: NSObject {
     var selectedSort:SortTypes = SortTypes.changeUp
     var excludedTickers: Set<String> = Set() // excluded from list
     var includedTickers: DashboardContainer = DashboardContainer()
-    
+    var section: Section = .stocksSection
     
     enum Filters: Int {
         case stockSpec
@@ -133,7 +166,7 @@ class PISettings: NSObject {
             }
         }
     }
-    
+
     func applyExcludeListAtTickers(tickers: [TickerModel]) -> [TickerModel] {
         let correction1:[TickerModel] = tickers.map{ (var ticker: TickerModel) in
             if containsInExlideList(ticker.Title) {
@@ -188,8 +221,7 @@ class PISettings: NSObject {
         return includedTickers.tickers
     }
     
-    
-    func dateTill() -> NSString {
+    func dateTill() -> String {
         let currentDate = NSDate()
         let calendar = NSCalendar.autoupdatingCurrentCalendar()
         var newDate:NSDate
@@ -202,7 +234,7 @@ class PISettings: NSObject {
     }
     
 
-    func dateFrom() -> NSString {
+    func dateFrom(period: Periods) -> String {
     
         let currentDate = NSDate()
         let calendar = NSCalendar.autoupdatingCurrentCalendar()
@@ -213,7 +245,7 @@ class PISettings: NSObject {
 
         
         
-        switch (datePeriod) {
+        switch (period) {
         case .oneDay:
             newDate = calendar.dateByAddingUnit(.Day, value: 0, toDate: currentDate, options: [])!
             
@@ -256,6 +288,12 @@ class PISettings: NSObject {
 
 class PIDashboardSettings: PISettings, NSCoding {
     
+    override var section: Section  {
+        get {
+            return .dashboard
+        }
+        set {}
+    }
     
     override init() {
         super.init()
@@ -287,11 +325,41 @@ class PIDashboardSettings: PISettings, NSCoding {
     }
 }
 
-class PIMutualFundSettings: PISettings {
+class PIMutualFundSettings: PISettings, NSCoding {
+    
+    override var section: Section  {
+        get {
+            return .mutualFundsSection
+        }
+        set {}
+    }
+    
     override init() {
         super.init()
         self.datePeriod = .oneYear
         self.selectedFilter = .mutualFundFundType
+    }
+    
+    required convenience init(coder decoder: NSCoder) {
+        self.init()
+        self.datePeriod = Periods(rawValue: (decoder.decodeObjectForKey("datePeriod") as! Int))!
+        self.selectedSort = SortTypes(rawValue: (decoder.decodeObjectForKey("selectedSort") as! Int))!
+        
+        if let fundTypeRawValue =  decoder.decodeObjectForKey("fundType") {
+            self.fundType = FundType(rawValue: fundTypeRawValue as! String)!
+        }
+        
+        if let fundCatRawValue =  decoder.decodeObjectForKey("fundCat") {
+            self.fundCat = FundCat(rawValue: fundCatRawValue as! String)!
+        }
+        
+    }
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(PISettingsManager.sharedInstance.mutualFund.datePeriod.rawValue, forKey: "datePeriod")
+        coder.encodeObject(PISettingsManager.sharedInstance.mutualFund.selectedSort.rawValue, forKey: "selectedSort")
+        coder.encodeObject(PISettingsManager.sharedInstance.mutualFund.fundType.rawValue, forKey: "fundType")
+        coder.encodeObject(PISettingsManager.sharedInstance.mutualFund.fundCat.rawValue, forKey: "fundCat")
     }
     
     override var filters:[Filters] {
@@ -377,166 +445,251 @@ class PIMutualFundSettings: PISettings {
 
 }
 
-class PICurrencySettings: PISettings {
+class PICurrencySettings: PISettings, NSCoding {
+    override var section: Section  {
+        get {
+            return .currenciesSection
+        }
+        set {}
+    }
+    
     override init() {
         super.init()
         self.datePeriod = .oneWeek
     }
     
+    required convenience init(coder decoder: NSCoder) {
+        self.init()
+        self.datePeriod = Periods(rawValue: (decoder.decodeObjectForKey("datePeriod") as! Int))!
+        self.selectedSort = SortTypes(rawValue: (decoder.decodeObjectForKey("selectedSort") as! Int))!
+    }
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(PISettingsManager.sharedInstance.currency.datePeriod.rawValue, forKey: "datePeriod")
+        coder.encodeObject(PISettingsManager.sharedInstance.currency.selectedSort.rawValue, forKey: "selectedSort")
+    }
+    
+    
 }
 
-class PIRealEstateSettings: PISettings {
+class PIRealEstateSettings: PISettings, NSCoding {
+    override var section: Section  {
+        get {
+            return .realEstatesSection
+        }
+        set {}
+    }
+    
     override init() {
         super.init()
         self.datePeriod = .oneYear
     }
+    
+    required convenience init(coder decoder: NSCoder) {
+        self.init()
+        self.datePeriod = Periods(rawValue: (decoder.decodeObjectForKey("datePeriod") as! Int))!
+        self.selectedSort = SortTypes(rawValue: (decoder.decodeObjectForKey("selectedSort") as! Int))!
+    }
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(PISettingsManager.sharedInstance.realEstate.datePeriod.rawValue, forKey: "datePeriod")
+        coder.encodeObject(PISettingsManager.sharedInstance.realEstate.selectedSort.rawValue, forKey: "selectedSort")
+    }
 
 }
 
-class PIBondSettings: PISettings {
-
+class PIBondSettings: PISettings, NSCoding {
+    override var section: Section  {
+        get {
+            return .bondsSection
+        }
+        set {}
+    }
     
     override init() {
         super.init()
         self.selectedFilter = .bondOtrasl
     }
     
+    required convenience init(coder decoder: NSCoder) {
+        self.init()
+        self.datePeriod = Periods(rawValue: (decoder.decodeObjectForKey("datePeriod") as! Int))!
+        self.selectedSort = SortTypes(rawValue: (decoder.decodeObjectForKey("selectedSort") as! Int))!
+        if let otraslRawValue =  decoder.decodeObjectForKey("otrasl") {
+           self.otrasl = Otrasl(rawValue:otraslRawValue as! String)!
+        }
+        
+        if let ratingRawValue =  decoder.decodeObjectForKey("rating") {
+            self.rating = Rating(rawValue: ratingRawValue as! String)!
+        }
+        
+        if let sektorRawValue =  decoder.decodeObjectForKey("sektor") {
+            self.sektor = Sektor(rawValue: sektorRawValue as! String)!
+        }
+        
+        if let periodRawValue =  decoder.decodeObjectForKey("period") {
+            self.period = Period(rawValue: periodRawValue as! String)!
+        }
+        
+        if let amortizacRawValue =  decoder.decodeObjectForKey("amortizac") {
+            self.amortizac = Amortizac(rawValue: amortizacRawValue as! String)!
+        }
+        
+        if let vidkuponaRawValue =  decoder.decodeObjectForKey("vidkupona") {
+            self.vidkupona = Vidkupona(rawValue: vidkuponaRawValue as! String)!
+        }
+
+    }
+    
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.datePeriod.rawValue, forKey: "datePeriod")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.selectedSort.rawValue, forKey: "selectedSort")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.otrasl.rawValue, forKey: "otrasl")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.rating.rawValue, forKey: "rating")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.sektor.rawValue, forKey: "sektor")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.period.rawValue, forKey: "period")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.amortizac.rawValue, forKey: "amortizac")
+        coder.encodeObject(PISettingsManager.sharedInstance.bond.vidkupona.rawValue, forKey: "vidkupona")
+        
+    }
+    
+    
     override var filters:[Filters] {
         get { return [Filters.bondOtrasl, Filters.bondSektor, Filters.bondRating, Filters.bondPeriod, Filters.bondAmor, Filters.bondVidk]}
         set {}
     }
     
-    
-    
-    var otrasl:Otrasl = .all
+    var otrasl:Otrasl = .All
 
     enum Otrasl: String {
-        case all = ""
-        case banks = "Банки"
-        case transportation = "Транспорт"
-        case other = "Другое"
-        case munic = "Муницип"
-        case communication = "Телеком"
-        case finance = "Финансы"
-        case oilGaz = "Нефтегаз"
-        case construction = "Строительство"
-        case food = "Пищевая"
-        case engineeringIndustry = "Машиностроение"
-        case govern = "Государственные"
+        case All = ""
+        case Banks = "Банки"
+        case Transportation = "Транспорт"
+        case Other = "Другое"
+        case Munic = "Муницип"
+        case Communication = "Телеком"
+        case Finance = "Финансы"
+        case OilGaz = "Нефтегаз"
+        case Construction = "Строительство"
+        case Food = "Пищевая"
+        case EngineeringIndustry = "Машиностроение"
+        case Govern = "Государственные"
         
-        static let allValues = [all, banks, transportation, communication, munic, finance, oilGaz, construction, food, engineeringIndustry, govern, other]
+        static let allValues = [All, Banks, Transportation, Communication, Munic, Finance, OilGaz, Construction, Food, EngineeringIndustry, Govern, Other]
         
         
         var description: String {
 
             switch self {
-                case .all: return "Все"
-                case .banks: return "Банки"
-                case .transportation: return "Транспорт"
-                case .other: return "Другое"
-                case .munic: return "Муницип"
-                case .communication: return "Телеком"
-                case .finance: return "Финансы"
-                case .oilGaz: return "Нефтегаз"
-                case .construction: return "Строительство"
-                case .food: return "Пищевая"
-                case .engineeringIndustry: return "Машиностроение"
-                case .govern: return "Государственные"
+                case .All: return "Все"
+                case .Banks: return "Банки"
+                case .Transportation: return "Транспорт"
+                case .Other: return "Другое"
+                case .Munic: return "Муницип"
+                case .Communication: return "Телеком"
+                case .Finance: return "Финансы"
+                case .OilGaz: return "Нефтегаз"
+                case .Construction: return "Строительство"
+                case .Food: return "Пищевая"
+                case .EngineeringIndustry: return "Машиностроение"
+                case .Govern: return "Государственные"
                 
             }
         }
     }
     
-    var rating: Rating = .all
+    var rating: Rating = .All
     enum Rating: String {
-        case all = ""
-        case yes = "есть"
-        case no = "нет"
+        case All = ""
+        case Yes = "есть"
+        case No = "нет"
         
-        static let allValues = [all, yes, no]
+        static let allValues = [All, Yes, No]
         
         var description: String {
             switch self {
-                case .all: return "Все"
-                case .yes: return "Есть"
-                case .no: return "Нет"
+                case .All: return "Все"
+                case .Yes: return "Есть"
+                case .No: return "Нет"
             }
         }
     }
     
-    var sektor: Sektor = .all
+    var sektor: Sektor = .All
     enum Sektor: String {
-        case all = ""
-        case corporate = "Корпоративные"
-        case munic = "Муниципальные"
-        case govern = "Государственные"
+        case All = ""
+        case Corporate = "Корпоративные"
+        case Munic = "Муниципальные"
+        case Govern = "Государственные"
         
-        static let allValues = [all, corporate, munic, govern]
+        static let allValues = [All, Corporate, Munic, Govern]
         
         var description: String {
             switch self {
-                case .all: return "Все"
-                case .corporate: return "Корпоративные"
-                case .munic: return "Муниципальные"
-                case .govern: return "Государственные"
+                case .All: return "Все"
+                case .Corporate: return "Корпоративные"
+                case .Munic: return "Муниципальные"
+                case .Govern: return "Государственные"
             }
         }
     }
     
-    var period: Period = .all
+    var period: Period = .All
     
     enum Period: String {
-        case all = ""
-        case f2t3 = "2-3 года"
-        case f3t5 = "3-5 лет"
-        case f5 = "Более 5 лет"
+        case All = ""
+        case F2t3 = "2-3 года"
+        case F3t5 = "3-5 лет"
+        case F5 = "Более 5 лет"
         
-        static let allValues = [all, f2t3, f3t5, f5]
+        static let allValues = [All, F2t3, F3t5, F5]
         
         var description: String {
             switch self {
-                case .all: return "Все"
-                case .f2t3: return "2-3 года"
-                case .f3t5: return "3-5 лет"
-                case .f5: return "Более 5 лет"
+                case .All: return "Все"
+                case .F2t3: return "2-3 года"
+                case .F3t5: return "3-5 лет"
+                case .F5: return "Более 5 лет"
             }
         }
     }
     
-    var amorticac: Amortizac = .all
+    var amortizac: Amortizac = .All
     
     enum Amortizac: String {
-        case all = ""
-        case yes = "есть"
-        case no = "нет"
+        case All = ""
+        case Yes = "есть"
+        case No = "нет"
         
-        static let allValues = [all, yes, no]
+        static let allValues = [All, Yes, No]
         
         var description: String {
             switch self {
-                case .all: return "Все"
-                case .yes: return "Есть"
-                case .no: return "Нет"
+                case .All: return "Все"
+                case .Yes: return "Есть"
+                case .No: return "Нет"
             }
         }
     }
     
-    var vidkupona: Vidkupona = .all
+    var vidkupona: Vidkupona = .All
     
     enum Vidkupona: String {
-        case all = ""
-        case fix = "Фиксированный"
-        case permanent = "Постоянный"
-        case variable = "Переменный"
+        case All = ""
+        case Fix = "фиксированный"
+        case Permanent = "постоянный"
+        case Variable = "переменный"
         
-        static let allValues = [all, fix, permanent, variable]
+        static let allValues = [All, Fix, Permanent, Variable]
+        
         
         var description: String {
             switch self {
-                case .all: return "Все"
-                case .fix: return "Фиксированный"
-                case .permanent: return "Постоянный"
-                case .variable: return "Переменный"
+                case .All: return "Все"
+                case .Fix: return "Фиксированный"
+                case .Permanent: return "Постоянный"
+                case .Variable: return "Переменный"
             }
         }
     }
@@ -573,7 +726,7 @@ class PIBondSettings: PISettings {
             case .bondRating: PISettingsManager.sharedInstance.bond.rating = PIBondSettings.Rating.allValues[row]
             case .bondSektor: PISettingsManager.sharedInstance.bond.sektor = PIBondSettings.Sektor.allValues[row]
             case .bondPeriod: PISettingsManager.sharedInstance.bond.period = PIBondSettings.Period.allValues[row]
-            case .bondAmor: PISettingsManager.sharedInstance.bond.amorticac = PIBondSettings.Amortizac.allValues[row]
+            case .bondAmor: PISettingsManager.sharedInstance.bond.amortizac = PIBondSettings.Amortizac.allValues[row]
             case .bondVidk: PISettingsManager.sharedInstance.bond.vidkupona = PIBondSettings.Vidkupona.allValues[row]
             default: print("error")
         }
@@ -585,7 +738,7 @@ class PIBondSettings: PISettings {
             case .bondRating: return PIBondSettings.Rating.allValues.indexOf(PISettingsManager.sharedInstance.bond.rating)!
             case .bondSektor: return PIBondSettings.Sektor.allValues.indexOf(PISettingsManager.sharedInstance.bond.sektor)!
             case .bondPeriod: return PIBondSettings.Period.allValues.indexOf(PISettingsManager.sharedInstance.bond.period)!
-            case .bondAmor: return PIBondSettings.Amortizac.allValues.indexOf(PISettingsManager.sharedInstance.bond.amorticac)!
+            case .bondAmor: return PIBondSettings.Amortizac.allValues.indexOf(PISettingsManager.sharedInstance.bond.amortizac)!
             case .bondVidk: return PIBondSettings.Vidkupona.allValues.indexOf(PISettingsManager.sharedInstance.bond.vidkupona)!
             default: print("error"); return -1
         }
@@ -593,24 +746,38 @@ class PIBondSettings: PISettings {
 
 }
 
-class PIIndicesSettings: PISettings {
+class PIIndicesSettings: PISettings, NSCoding {
+    override var section: Section  {
+        get {
+            return .indicesSection
+        }
+        set {}
+    }
     
     override init() {
         super.init()
         self.datePeriod = .oneYear
     }
-}
-
-class PIWorldIndicesSettings: PISettings {
-
-}
-
-class PIRusIndicesSettings: PISettings {
-
+    
+    required convenience init(coder decoder: NSCoder) {
+        self.init()
+        self.datePeriod = Periods(rawValue: (decoder.decodeObjectForKey("datePeriod") as! Int))!
+        self.selectedSort = SortTypes(rawValue: (decoder.decodeObjectForKey("selectedSort") as! Int))!
+    }
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(PISettingsManager.sharedInstance.indices.datePeriod.rawValue, forKey: "datePeriod")
+        coder.encodeObject(PISettingsManager.sharedInstance.indices.selectedSort.rawValue, forKey: "selectedSort")
+    }
 }
 
 class PIStockSettings: PISettings, NSCoding {
-    
+    override var section: Section  {
+        get {
+            return .stocksSection
+        }
+        set {}
+    }
     
     override init() {
         super.init()

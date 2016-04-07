@@ -73,7 +73,7 @@ class PIGraph:ChartViewDelegate {
     
     func setDataCount(manager:PISectionManager) {
         
-        if (manager.section == .bondsSection) {
+        if (manager.settings.section == .bondsSection) {
             return
         }
 

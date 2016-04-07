@@ -67,55 +67,44 @@ class PISideMenu: UITableViewController {
     
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-
-
-
-        
-        
         let vc:ViewController = self.storyboard?.instantiateViewControllerWithIdentifier("contentController") as! ViewController
         
-        
-        
-        if indexPath.row == 0 {
-            vc.prepareForSection(.dashboard)
-            vc.title = "Дэшборд"
-        } else if indexPath.row == 1 {
-            vc.prepareForSection(.stocksSection)
-            vc.title = "Акции"
-        } else if indexPath.row == 2 {
-            vc.prepareForSection(.currenciesSection)
-            vc.title = "Валюта"
-        } else if indexPath.row == 3 {
-            vc.prepareForSection(.realEstatesSection)
-            vc.title = "Недвижимость"
-        } else if indexPath.row == 4 {
-            vc.prepareForSection(.bondsSection)
-            vc.title = "Облигации"
-        } else if indexPath.row == 5 {
-            vc.prepareForSection(.indicesSection)
-            vc.title = "Индексы"
-        } else if indexPath.row == 6 {
-            vc.prepareForSection(.mutualFundsSection)
-            vc.title = "Пифы"
+        switch indexPath.row {
+            case 0:
+                vc.settingsButton.enabled = false
+                vc.sectionManager = PIDashboardManager()
+                vc.settings = PISettingsManager.sharedInstance.dashboard
+            case 1:
+                vc.sectionManager = PIStocksManager()
+                vc.settings = PISettingsManager.sharedInstance.stock
+            case 2:
+                vc.sectionManager = PICurrenciesManager()
+                vc.settings = PISettingsManager.sharedInstance.currency
+            case 3:
+                vc.sectionManager = PIRealEstatesManager()
+                vc.settings = PISettingsManager.sharedInstance.realEstate
+            case 4:
+                vc.sectionManager = PIBondsManager()
+                vc.settings = PISettingsManager.sharedInstance.bond
+            case 5:
+                vc.sectionManager = PIIndicesManager()
+                vc.settings = PISettingsManager.sharedInstance.indices
+            case 6:
+                vc.sectionManager = PIMutualFundsManager()
+                vc.settings = PISettingsManager.sharedInstance.mutualFund
+            default:
+                print("rows more then 7")
         }
-      
+        
+        vc.title = vc.settings.section.description
+        
         let nc = UINavigationController(rootViewController: vc)
-        
-        
         
         self.frostedViewController.contentViewController = nc
         self.frostedViewController.hideMenuViewController()
         
         
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
 
 }

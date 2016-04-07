@@ -29,16 +29,15 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             self.changeLabels.1.text = "\(self.manager.fetchedChange())%"
         }
     }
+    
     func openPopover(sourceView: UIView, type: PopoverType) {
         
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.title = "Details"
-        
    
         if PISettingsManager.sharedInstance.dashboard.containsInDashboard(self.ticker) {
             self.navigationItem.rightBarButtonItem?.title = "Remove"
@@ -76,6 +75,8 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             
         case .mutualFundsSection:
             
+            datesAndSorts.deactivate()
+            
             rateLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(self.view).offset(60)
                 make.leading.equalTo(self.view).offset(10)
@@ -95,7 +96,6 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(rateLabels.0.snp_bottom).offset(10)
                 make.leading.equalTo(changeLabels.0.snp_trailing).offset(10)
             }
-            
             
             
             let mutualFundsManager = PIMutualFundsManager()
@@ -155,16 +155,16 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             self.view.addSubview(schaLabels.0)
             self.view.addSubview(schaLabels.1)
             
-            let urlLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.url, value: mutualFundsManager.URL)
-            let linkTextView = UITextView()
-            linkTextView.dataDetectorTypes = .Link
-            linkTextView.editable = false
-            linkTextView.text = urlLabels.1.text
-            
-            
-            self.view.addSubview(urlLabels.0)
-            self.view.addSubview(linkTextView)
-            
+//            let urlLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.url, value: mutualFundsManager.URL)
+//            let linkTextView = UITextView()
+//            linkTextView.dataDetectorTypes = .Link
+//            linkTextView.editable = false
+//            linkTextView.text = urlLabels.1.text
+//            
+//            
+//            self.view.addSubview(urlLabels.0)
+//            self.view.addSubview(linkTextView)
+//            
             
             fundnameLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(changeLabels.0.snp_bottom).offset(10)
@@ -269,22 +269,24 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.leading.equalTo(schaLabels.0.snp_trailing).offset(10)
             }
             
-            urlLabels.0.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(schaLabels.0.snp_bottom).offset(10)
-                make.leading.equalTo(self.view).offset(10)
-            }
-            
-            linkTextView.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(urlLabels.0)
-                make.left.equalTo(urlLabels.0.snp_right).offset(10)
-                make.width.equalTo(200)
-                make.height.equalTo(40)
-            }
+//            urlLabels.0.snp_makeConstraints { (make) -> Void in
+//                make.top.equalTo(schaLabels.0.snp_bottom).offset(10)
+//                make.leading.equalTo(self.view).offset(10)
+//            }
+//            
+//            linkTextView.snp_makeConstraints { (make) -> Void in
+//                make.top.equalTo(urlLabels.0)
+//                make.left.equalTo(urlLabels.0.snp_right).offset(10)
+//                make.width.equalTo(200)
+//                make.height.equalTo(40)
+//            }
 
 
             
         case .bondsSection:
 
+            datesAndSorts.deactivate()
+            
             rateLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(self.view).offset(60)
                 make.leading.equalTo(self.view).offset(10)
@@ -391,14 +393,14 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             
         default:
             
+            
+            
             pigraph.contentView.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(self.view).offset(110)
                 make.leading.equalTo(self.view).offset(10)
                 make.trailing.equalTo(self.view).offset(-20)
                 make.bottom.equalTo(self.view).offset(-120)
-                
             }
-            
             
             rateLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(pigraph.contentView.snp_bottom).offset(10)
@@ -419,10 +421,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(rateLabels.0.snp_bottom).offset(10)
                 make.leading.equalTo(changeLabels.0.snp_trailing).offset(10)
             }
-
-
         }
-        
         
         self.request()
         
@@ -439,51 +438,6 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    /*
-    func makeRequest () {
-        self.manager.fetchInBackground(self.settings,ticker: self.ticker) { (changeRel) -> Void in
-            
-            self.pigraph.setDataCount(self.manager)
-            self.changeLabels.1.text = "\(self.manager.fetchedChange())%"
-        }
-    }
-    
-    func periodAction(period: Periods) {
-        settings.datePeriod = period
-        makeRequest()
-    }
-    
-    func oneDayPeriodAction() {
-        settings.datePeriod = .oneDay
-        makeRequest()
-    }
-    
-    func oneWeekPeriodAction() {
-        settings.datePeriod = .oneWeek
-        makeRequest()
-    }
-    
-    func oneMonthPeriodAction() {
-        settings.datePeriod = .oneMonth
-        makeRequest()
-    }
-    
-    func oneYearPeriodAction() {
-        settings.datePeriod = .oneYear
-        makeRequest()
-    }
-    
-    func threeYearsPeriodAction() {
-        settings.datePeriod = .threeYears
-        makeRequest()
-    }
-    
-    func fiveYearsPeriodAction() {
-        settings.datePeriod = .fiveYears
-        makeRequest()
-    }
-    */
     
     @IBAction func selectTapped(sender: UIBarButtonItem) {
         if PISettingsManager.sharedInstance.dashboard.containsInDashboard(self.ticker) {

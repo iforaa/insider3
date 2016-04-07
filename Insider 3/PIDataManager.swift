@@ -51,8 +51,26 @@ class PIDataManager {
             }
             
             
+        }.onFailure { (error) in
+            
+            Alamofire.request(.GET, self.url, parameters: ["sections": section.description.lowercaseString,"date_from":date_from,"date_till":date_till, "limited":"1"]).responseJSON {response in
+                
+                print(response.request?.URL)
+                if let data = response.result.value {
+                    
+                    let baseJSON: JSON = data as! JSON
+                    let baseModel: BaseModel = BaseModel(json: baseJSON)!
+                    
+                    
+                    completion(result: baseModel.Tickers)
+                    
+                }
+            }
+            
+            
         }
     }
+    
     
     func fetchTicker(section: Section, dateFrom: NSString, dateTill: NSString, ticker: NSString, completion:
         (fetchedItems: TickerModel) -> Void) {
@@ -73,38 +91,5 @@ class PIDataManager {
                 }
 
             }
-
-            
-            
-            
-            /*
-            
-
-            Alamofire.request(.GET , self.url, parameters: ["sections": section.description.lowercaseString,"date_from":dateFrom,"date_till":dateTill, "tickers":ticker]).responseJSON {response in
-                
-                switch response.result {
-                case .Success(let JSON): break
-                    
-                    
-
-                    
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                }
-                    
-                  /*
-
-                    cache.set(value: jsonhaneke, key: "dsfsdf")
-                    let baseJSON: JSON =
-
-                    */
-                
-            }
-                
-
-
-        */
-            
-        
     }
 }
