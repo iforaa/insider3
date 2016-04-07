@@ -59,12 +59,12 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
         
         
     
-        let rateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.rateLabel,value: "\(self.manager.currentRate(self.manager.selectedTickerNum))")
+        let rateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.RateLabel,value: "\(self.manager.currentRate(self.manager.selectedTickerNum))")
         
         self.view.addSubview(rateLabels.0)
         self.view.addSubview(rateLabels.1)
 
-        changeLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.changeLabel,value: "\(self.manager.change(self.manager.selectedTickerNum))%")
+        changeLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.ChangeLabel,value: "\(self.manager.change(self.manager.selectedTickerNum))%")
         
         self.view.addSubview(changeLabels.0)
         self.view.addSubview(changeLabels.1)
@@ -73,7 +73,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
         switch self.ticker.section {
             
             
-        case .mutualFundsSection:
+        case .MutualFundsSection:
             
             datesAndSorts.deactivate()
             
@@ -105,52 +105,52 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             mutualFundsManager.selectedTickerNum = self.manager.selectedTickerNum
             
             
-            let fundnameLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.fundname,value: mutualFundsManager.Fundname)
+            let fundnameLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Fundname,value: mutualFundsManager.Fundname)
             
             self.view.addSubview(fundnameLabels.0)
             self.view.addSubview(fundnameLabels.1)
             
-            let uknameLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.ukname,value: mutualFundsManager.Ukname)
+            let uknameLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Ukname,value: mutualFundsManager.Ukname)
             
             self.view.addSubview(uknameLabels.0)
             self.view.addSubview(uknameLabels.1)
             
-            let fundtypeLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.fundtype,value: mutualFundsManager.Fundtype)
+            let fundtypeLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Fundtype,value: mutualFundsManager.Fundtype)
             
             self.view.addSubview(fundtypeLabels.0)
             self.view.addSubview(fundtypeLabels.1)
             
-            let fundcatLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.fundcat,value: mutualFundsManager.Fundcat)
+            let fundcatLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Fundcat,value: mutualFundsManager.Fundcat)
             
             self.view.addSubview(fundcatLabels.0)
             self.view.addSubview(fundcatLabels.1)
             
-            let registrationdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.registrationdate,value: mutualFundsManager.Registrationdate)
+            let registrationdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Registrationdate,value: mutualFundsManager.Registrationdate)
             
             self.view.addSubview(registrationdateLabels.0)
             self.view.addSubview(registrationdateLabels.1)
             
-            let startformirdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.startformirdate,value: mutualFundsManager.Startformirdate)
+            let startformirdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Startformirdate,value: mutualFundsManager.Startformirdate)
             
             self.view.addSubview(startformirdateLabels.0)
             self.view.addSubview(startformirdateLabels.1)
             
-            let endformirdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.endformirdate,value: mutualFundsManager.Endformirdate)
+            let endformirdateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Endformirdate,value: mutualFundsManager.Endformirdate)
             
             self.view.addSubview(endformirdateLabels.0)
             self.view.addSubview(endformirdateLabels.1)
             
-            let minsuminvestLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.minsumminvest,value: mutualFundsManager.Minsumminvest)
+            let minsuminvestLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Minsumminvest,value: mutualFundsManager.Minsumminvest)
             
             self.view.addSubview(minsuminvestLabels.0)
             self.view.addSubview(minsuminvestLabels.1)
             
-            let stpayaLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.stpaya,value: mutualFundsManager.Stpaya)
+            let stpayaLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Stpaya,value: mutualFundsManager.Stpaya)
             
             self.view.addSubview(stpayaLabels.0)
             self.view.addSubview(stpayaLabels.1)
             
-            let schaLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.scha,value: mutualFundsManager.Scha)
+            let schaLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.Scha,value: mutualFundsManager.Scha)
             
             self.view.addSubview(schaLabels.0)
             self.view.addSubview(schaLabels.1)
@@ -283,7 +283,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
 
 
             
-        case .bondsSection:
+        case .BondsSection:
 
             datesAndSorts.deactivate()
             
@@ -315,27 +315,27 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             bondManager.selectedTickerNum = self.manager.selectedTickerNum
 
             
-            let emitentLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.emitentLabel,value:"emitent not found")
+            let emitentLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.EmitentLabel,value:"emitent not found")
             
             self.view.addSubview(emitentLabels.0)
             self.view.addSubview(emitentLabels.1)
             
-            let maturityDateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.maturityDateLabel,value:bondManager.maturityDate)
+            let maturityDateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.MaturityDateLabel,value:bondManager.maturityDate)
             
             self.view.addSubview(maturityDateLabels.0)
             self.view.addSubview(maturityDateLabels.1)
             
-            let yieldLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.yieldLabel,value: bondManager.yield)
+            let yieldLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.YieldLabel,value: bondManager.yield)
             
             self.view.addSubview(yieldLabels.0)
             self.view.addSubview(yieldLabels.1)
             
-            let dayValueLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.dayValueLabel,value: bondManager.dayValue)
+            let dayValueLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.DayValueLabel,value: bondManager.dayValue)
             
             self.view.addSubview(dayValueLabels.0)
             self.view.addSubview(dayValueLabels.1)
             
-            let couponLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.couponLabel,value:bondManager.coupon)
+            let couponLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.CouponLabel,value:bondManager.coupon)
             
             self.view.addSubview(couponLabels.0)
             self.view.addSubview(couponLabels.1)

@@ -17,7 +17,6 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         nav.topViewController!.navigationItem.leftBarButtonItem = btnDone
         return nav
     }
-    
 }
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
@@ -110,7 +109,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func openPopover(sourceView: UIView, type: PopoverType) {
         var popoverVC:UIViewController
 
-        if type == .sort {
+        if type == .Sort {
             popoverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCSort")
             let vc:PopoverSortVC = popoverVC as! PopoverSortVC
             vc.delegate = self

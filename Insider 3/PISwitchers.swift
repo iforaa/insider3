@@ -220,7 +220,7 @@ class PIDatesAndSortsView: UIView {
             make.width.equalTo(self)
         }
         
-        oneDayPer = self.dateButton("1d", period: .oneDay)
+        oneDayPer = self.dateButton("1d", period: .OneDay)
         periodsScreen.addSubview(oneDayPer)
         
         oneDayPer.snp_makeConstraints { (make) -> Void in
@@ -228,7 +228,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        oneWeekPer = self.dateButton("1w", period: .oneWeek)
+        oneWeekPer = self.dateButton("1w", period: .OneWeek)
         periodsScreen.addSubview(oneWeekPer)
         
         oneWeekPer.snp_makeConstraints { (make) -> Void in
@@ -236,7 +236,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        oneMonthPer = self.dateButton("1m", period: .oneMonth)
+        oneMonthPer = self.dateButton("1m", period: .OneMonth)
         periodsScreen.addSubview(oneMonthPer)
         
         oneMonthPer.snp_makeConstraints { (make) -> Void in
@@ -244,7 +244,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        oneYearPer = self.dateButton("1y", period: .oneYear)
+        oneYearPer = self.dateButton("1y", period: .OneYear)
         periodsScreen.addSubview(oneYearPer)
         
         oneYearPer.snp_makeConstraints { (make) -> Void in
@@ -252,7 +252,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        threeYearsPer = self.dateButton("3y", period: .threeYears)
+        threeYearsPer = self.dateButton("3y", period: .ThreeYears)
         periodsScreen.addSubview(threeYearsPer)
         
         threeYearsPer.snp_makeConstraints { (make) -> Void in
@@ -260,7 +260,7 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
-        fiveYearsPer = self.dateButton("5y", period: .fiveYears)
+        fiveYearsPer = self.dateButton("5y", period: .FiveYears)
         periodsScreen.addSubview(fiveYearsPer)
         
         fiveYearsPer.snp_makeConstraints { (make) -> Void in
@@ -273,7 +273,7 @@ class PIDatesAndSortsView: UIView {
         if sortAndFilterButtonsActivated {
             self.sortsbutton.setTitle("Sort", forState: UIControlState.Normal)
             self.sortsbutton.addControlEvent(.TouchUpInside, closure: {
-                self.delegate.openPopover(self.sortsbutton, type: .sort)
+                self.delegate.openPopover(self.sortsbutton, type: .Sort)
             })
             self.sortsbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
             periodsScreen.addSubview(self.sortsbutton)
@@ -287,7 +287,7 @@ class PIDatesAndSortsView: UIView {
             if self.settings.filters.count > 0 {
                 self.filtersbutton.setTitle("Filter", forState: UIControlState.Normal)
                 self.filtersbutton.addControlEvent(.TouchUpInside, closure: {
-                    self.delegate.openPopover(self.filtersbutton, type: .filter)
+                    self.delegate.openPopover(self.filtersbutton, type: .Filter)
                 })
                 self.filtersbutton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
                 periodsScreen.addSubview(self.filtersbutton)
@@ -310,17 +310,17 @@ class PIDatesAndSortsView: UIView {
         fiveYearsPer.backgroundColor = UIColor.redColor()
             
         switch self.settings.datePeriod {
-        case .oneDay:
+        case .OneDay:
             oneDayPer.backgroundColor = UIColor.blackColor()
-        case .oneWeek:
+        case .OneWeek:
             oneWeekPer.backgroundColor = UIColor.blackColor()
-        case .oneMonth:
+        case .OneMonth:
             oneMonthPer.backgroundColor = UIColor.blackColor()
-        case .oneYear:
+        case .OneYear:
             oneYearPer.backgroundColor = UIColor.blackColor()
-        case .threeYears:
+        case .ThreeYears:
             threeYearsPer.backgroundColor = UIColor.blackColor()
-        case .fiveYears:
+        case .FiveYears:
             fiveYearsPer.backgroundColor = UIColor.blackColor()
         }
     }

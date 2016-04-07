@@ -79,25 +79,25 @@ class PISectionManager {
     func sort() {
         switch (settings.selectedSort) {
 
-        case .changeUp:
+        case .ChangeUp:
             
             self.tickers.sortInPlace {(stock1: TickerModel, stock2: TickerModel) -> Bool in
                 stock1.Change > stock2.Change
                 
             }
             
-        case .changeDown:
+        case .ChangeDown:
             self.tickers.sortInPlace {(stock1: TickerModel, stock2: TickerModel) -> Bool in
                 stock1.Change < stock2.Change
                 
             }
             
-        case .capUp:
+        case .CapUp:
             
             self.tickers.sortInPlace {(ticker1:TickerModel, ticker2: TickerModel) -> Bool in
                 (ticker1 as! StockTickerModel).Capitalisation > (ticker2 as! StockTickerModel).Capitalisation
             }
-        case .capDown:
+        case .CapDown:
             self.tickers.sortInPlace {(ticker1: TickerModel, ticker2: TickerModel) -> Bool in
                 (ticker1 as! StockTickerModel).Capitalisation < (ticker2 as! StockTickerModel).Capitalisation
             }
@@ -222,7 +222,7 @@ class PIStocksManager:PISectionManager {
     override func filter() {
         self.tickers = PISettingsManager.sharedInstance.settings.tickers
         
-        if PISettingsManager.sharedInstance.stock.specialisation == .all {
+        if PISettingsManager.sharedInstance.stock.specialisation == .All {
             self.tickers = PISettingsManager.sharedInstance.settings.tickers
         } else {
             self.tickers = self.tickers.filter({item in ((item as! StockTickerModel).Specialisation) == PISettingsManager.sharedInstance.stock.specialisation})
@@ -297,12 +297,12 @@ class PIIndicesManager: PISectionManager { // combine WorldIndices with RusIndic
     override func requestInBackground(completion: (success: Bool) -> Void) {
         
         let dates = (settings.dateFrom(settings.datePeriod),settings.dateTill())
-        PIDataManager().requestSection(.worldIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultWorldIndices) -> Void in
+        PIDataManager().requestSection(.WorldIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultWorldIndices) -> Void in
             
             PISettingsManager.sharedInstance.settings.tickers = resultWorldIndices
             self.tickers = resultWorldIndices
             
-            PIDataManager().requestSection(.rusIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultRusIndices) -> Void in
+            PIDataManager().requestSection(.RusIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultRusIndices) -> Void in
                 
                 PISettingsManager.sharedInstance.settings.tickers.appendContentsOf(resultRusIndices)
                 self.tickers.appendContentsOf(resultRusIndices)
@@ -336,7 +336,7 @@ class PIMutualFundsManager:PISectionManager {
             
             self.tickers = []
             PISettingsManager.sharedInstance.settings.tickers = []
-            let dates = (settings.dateFrom(.oneMonth),settings.dateTill())
+            let dates = (settings.dateFrom(.OneMonth),settings.dateTill())
             PIDataManager().requestSection(self.settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
                 
                 PISettingsManager.sharedInstance.settings.tickers = result
@@ -357,12 +357,12 @@ class PIMutualFundsManager:PISectionManager {
         if self.tickers[row].Items.first is MutualFundItemModel {
             let item = self.tickers[row].Items.first as! MutualFundItemModel
             switch self.settings.datePeriod {
-                case .oneDay: self.tickers[row].Change = item.Proc_day!
-                case .oneWeek: self.tickers[row].Change = item.Proc_week!
-                case .oneMonth: self.tickers[row].Change = item.Proc_month1!
-                case .oneYear: self.tickers[row].Change = item.Proc_year1!
-                case .threeYears: self.tickers[row].Change = item.Proc_year3!
-                case .fiveYears: self.tickers[row].Change = item.Proc_year5!
+                case .OneDay: self.tickers[row].Change = item.Proc_day!
+                case .OneWeek: self.tickers[row].Change = item.Proc_week!
+                case .OneMonth: self.tickers[row].Change = item.Proc_month1!
+                case .OneYear: self.tickers[row].Change = item.Proc_year1!
+                case .ThreeYears: self.tickers[row].Change = item.Proc_year3!
+                case .FiveYears: self.tickers[row].Change = item.Proc_year5!
             }
         }
         

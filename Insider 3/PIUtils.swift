@@ -12,75 +12,75 @@ import UIKit
 
 
 enum PopoverType {
-    case sort
-    case filter
+    case Sort
+    case Filter
 }
 
 class PIControlViewFactory {
     
     enum LabelType:String {
-        case rateLabel
-        case changeLabel
-        case emitentLabel
-        case maturityDateLabel
-        case yieldLabel
-        case dayValueLabel
-        case couponLabel
+        case RateLabel
+        case ChangeLabel
+        case EmitentLabel
+        case MaturityDateLabel
+        case YieldLabel
+        case DayValueLabel
+        case CouponLabel
         
-        case fundname
-        case ukname
-        case fundtype
-        case fundcat
-        case registrationdate
-        case startformirdate
-        case endformirdate
-        case minsumminvest
-        case stpaya
-        case scha
-        case url
+        case Fundname
+        case Ukname
+        case Fundtype
+        case Fundcat
+        case Registrationdate
+        case Startformirdate
+        case Endformirdate
+        case Minsumminvest
+        case Stpaya
+        case Scha
+        case Url
 
         
         var description: String {
             switch self {
-            case .rateLabel: return "Rate: "
-            case .changeLabel: return "Change: "
-            case .emitentLabel: return "emitent: "
-            case .maturityDateLabel: return "maturityDate: "
-            case .yieldLabel: return "yield: "
-            case .dayValueLabel: return "dayValue: "
-            case .couponLabel: return "coupon: "
-                
-            case fundname: return "fundname"
-            case ukname: return "ukname"
-            case fundtype: return "fundtype"
-            case fundcat: return "fundcat"
-            case registrationdate: return "registration date"
-            case startformirdate: return "start form date"
-            case endformirdate: return "end form date"
-            case minsumminvest: return "min sum invest"
-            case stpaya: return "stpaya"
-            case scha: return "scha"
-            case url: return "url"
+                case .RateLabel: return "Rate: "
+                case .ChangeLabel: return "Change: "
+                case .EmitentLabel: return "emitent: "
+                case .MaturityDateLabel: return "maturityDate: "
+                case .YieldLabel: return "yield: "
+                case .DayValueLabel: return "dayValue: "
+                case .CouponLabel: return "coupon: "
+                    
+                case Fundname: return "fundname"
+                case Ukname: return "ukname"
+                case Fundtype: return "fundtype"
+                case Fundcat: return "fundcat"
+                case Registrationdate: return "registration date"
+                case Startformirdate: return "start form date"
+                case Endformirdate: return "end form date"
+                case Minsumminvest: return "min sum invest"
+                case Stpaya: return "stpaya"
+                case Scha: return "scha"
+                case Url: return "url"
             }
         }
     }
     
     enum ButtonType: String {
-        case dayButton
-        case weekButton
-        case monthButton
-        case yearButton
-        case threeYearsButton
-        case fiveYearsButton
+        case DayButton
+        case WeekButton
+        case MonthButton
+        case YearButton
+        case ThreeYearsButton
+        case FiveYearsButton
         
         var description: String {
             switch self {
-            case dayButton: return "1d"
-            case weekButton: return "1w"
-            case monthButton: return "1m"
-            case yearButton: return "1y"
-            case threeYearsButton: return "3y"
-            case fiveYearsButton: return "5y"
+                case DayButton: return "1d"
+                case WeekButton: return "1w"
+                case MonthButton: return "1m"
+                case YearButton: return "1y"
+                case ThreeYearsButton: return "3y"
+                case FiveYearsButton: return "5y"
             }
         }
     }

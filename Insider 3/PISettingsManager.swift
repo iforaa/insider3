@@ -110,71 +110,72 @@ class PISettingsManager {
 class PISettings: NSObject {
     
     
-    var selectedFilter:Filters = .stockSpec
+    var selectedFilter:Filters = .StockSpec
     var filters:[Filters] = []
     var tickers: [TickerModel] = [] // persistent tickers collection
-    var datePeriod:Periods = .oneDay
+    var datePeriod:Periods = .OneDay
 
-    var sorts:[SortTypes] = [SortTypes.changeUp,SortTypes.changeDown]
-    var selectedSort:SortTypes = SortTypes.changeUp
+    var sorts:[SortTypes] = [SortTypes.ChangeUp,SortTypes.ChangeDown]
+    var selectedSort:SortTypes = SortTypes.ChangeUp
     var excludedTickers: Set<String> = Set() // excluded from list
     var includedTickers: DashboardContainer = DashboardContainer()
-    var section: Section = .stocksSection
+    var section: Section = .StocksSection
     
     enum Filters: Int {
-        case stockSpec
+        case StockSpec
         
-        case bondOtrasl
-        case bondRating
-        case bondSektor
-        case bondPeriod
-        case bondAmor
-        case bondVidk
+        case BondOtrasl
+        case BondRating
+        case BondSektor
+        case BondPeriod
+        case BondAmor
+        case BondVidk
         
-        case mutualFundFundType
-        case mutualFundFundCat
+        case MutualFundFundType
+        case MutualFundFundCat
         
         
         var description: String {
             switch self {
-            case .stockSpec: return "Специализация"
-            case .bondOtrasl: return "Отрасль"
-            case .bondRating: return "Рейтинг"
-            case .bondSektor: return "Сектор"
-            case .bondPeriod: return "Период"
-            case .bondAmor: return "Амортизация"
-            case .bondVidk: return "Вид купона"
-            case .mutualFundFundType: return "Тип"
-            case .mutualFundFundCat: return "Категория"
+            case .StockSpec: return "Специализация"
+            case .BondOtrasl: return "Отрасль"
+            case .BondRating: return "Рейтинг"
+            case .BondSektor: return "Сектор"
+            case .BondPeriod: return "Период"
+            case .BondAmor: return "Амортизация"
+            case .BondVidk: return "Вид купона"
+            case .MutualFundFundType: return "Тип"
+            case .MutualFundFundCat: return "Категория"
             }
         }
     }
     
     enum SortTypes: Int {
-        case changeUp
-        case changeDown
-        case capUp
-        case capDown
+        case ChangeUp
+        case ChangeDown
+        case CapUp
+        case CapDown
         var description: String {
             if true {
                 switch self {
-                case .changeUp: return "Растущие"
-                case .changeDown: return "Падающие"
-                case .capUp: return "Дорогие"
-                case .capDown: return "Дешевые"
+                case .ChangeUp: return "Растущие"
+                case .ChangeDown: return "Падающие"
+                case .CapUp: return "Дорогие"
+                case .CapDown: return "Дешевые"
                 }
             }
         }
     }
 
     func applyExcludeListAtTickers(tickers: [TickerModel]) -> [TickerModel] {
-        let correction1:[TickerModel] = tickers.map{ (var ticker: TickerModel) in
-            if containsInExlideList(ticker.Title) {
-                ticker.Show = false
+        let correction1:[TickerModel] = tickers.map{ (ticker: TickerModel) in
+            var tickerLocal = ticker
+            if containsInExlideList(tickerLocal.Title) {
+                tickerLocal.Show = false
             } else {
-                ticker.Show = true
+                tickerLocal.Show = true
             }
-            return ticker
+            return tickerLocal
         }
         
         let calendar = NSCalendar.autoupdatingCurrentCalendar()
@@ -246,22 +247,22 @@ class PISettings: NSObject {
         
         
         switch (period) {
-        case .oneDay:
+        case .OneDay:
             newDate = calendar.dateByAddingUnit(.Day, value: 0, toDate: currentDate, options: [])!
             
-        case .oneWeek:
+        case .OneWeek:
             newDate = calendar.dateByAddingUnit(.Day, value: -7, toDate: currentDate, options: [])!
             
-        case .oneMonth:
+        case .OneMonth:
             newDate = calendar.dateByAddingUnit(.Month, value: -1, toDate: currentDate, options: [])!
             
-        case .oneYear:
+        case .OneYear:
             newDate = calendar.dateByAddingUnit(.Year, value: -1, toDate: currentDate, options: [])!
 
-        case .threeYears:
+        case .ThreeYears:
             newDate = calendar.dateByAddingUnit(.Year, value: -3, toDate: currentDate, options: [])!
         
-        case .fiveYears:
+        case .FiveYears:
             newDate = calendar.dateByAddingUnit(.Year, value: -5, toDate: currentDate, options: [])!
         }
         
@@ -290,21 +291,21 @@ class PIDashboardSettings: PISettings, NSCoding {
     
     override var section: Section  {
         get {
-            return .dashboard
+            return .Dashboard
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.datePeriod = .oneMonth
+        self.datePeriod = .OneMonth
     
     }
     
     func populateWithDefaultTickers() {
-        self.includedTickers.addElement(DashboardTickerModel(key: "Аэрофлот-ао", title: "Аэрофлот-ао", section: .stocksSection, ID: "4200"))
-        self.includedTickers.addElement(DashboardTickerModel(key: "Абсолют Банк-3-боб", title: "Абсолют Банк-3-боб", section: .bondsSection, ID: "89964"))
-        self.includedTickers.addElement(DashboardTickerModel(key: "R01235", title: "Доллар США", section: .currenciesSection, ID: "USD"))
+        self.includedTickers.addElement(DashboardTickerModel(key: "Аэрофлот-ао", title: "Аэрофлот-ао", section: .StocksSection, ID: "4200"))
+        self.includedTickers.addElement(DashboardTickerModel(key: "Абсолют Банк-3-боб", title: "Абсолют Банк-3-боб", section: .BondsSection, ID: "89964"))
+        self.includedTickers.addElement(DashboardTickerModel(key: "R01235", title: "Доллар США", section: .CurrenciesSection, ID: "USD"))
     }
 
     required convenience init(coder decoder: NSCoder) {
@@ -329,15 +330,15 @@ class PIMutualFundSettings: PISettings, NSCoding {
     
     override var section: Section  {
         get {
-            return .mutualFundsSection
+            return .MutualFundsSection
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.datePeriod = .oneYear
-        self.selectedFilter = .mutualFundFundType
+        self.datePeriod = .OneYear
+        self.selectedFilter = .MutualFundFundType
     }
     
     required convenience init(coder decoder: NSCoder) {
@@ -363,7 +364,7 @@ class PIMutualFundSettings: PISettings, NSCoding {
     }
     
     override var filters:[Filters] {
-        get { return [Filters.mutualFundFundType, Filters.mutualFundFundCat]}
+        get { return [Filters.MutualFundFundType, Filters.MutualFundFundCat]}
         set {}
     }
     
@@ -411,16 +412,16 @@ class PIMutualFundSettings: PISettings, NSCoding {
     
     override func descriptionFilterRow(row: Int) -> String {
         switch selectedFilter {
-        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues[row].description
-        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues[row].description
+        case .MutualFundFundType: return PIMutualFundSettings.FundType.allValues[row].description
+        case .MutualFundFundCat: return PIMutualFundSettings.FundCat.allValues[row].description
         default: return "error"
         }
     }
     
     override func countFilterRows() -> Int {
         switch selectedFilter {
-        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues.count
-        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.count
+        case .MutualFundFundType: return PIMutualFundSettings.FundType.allValues.count
+        case .MutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.count
         default: print("error"); return -1
             
         }
@@ -428,8 +429,8 @@ class PIMutualFundSettings: PISettings, NSCoding {
     
     override func selectFilterRow(row: Int) {
         switch selectedFilter {
-        case .mutualFundFundType: PISettingsManager.sharedInstance.mutualFund.fundType = PIMutualFundSettings.FundType.allValues[row]
-        case .mutualFundFundCat: PISettingsManager.sharedInstance.mutualFund.fundCat = PIMutualFundSettings.FundCat.allValues[row]
+        case .MutualFundFundType: PISettingsManager.sharedInstance.mutualFund.fundType = PIMutualFundSettings.FundType.allValues[row]
+        case .MutualFundFundCat: PISettingsManager.sharedInstance.mutualFund.fundCat = PIMutualFundSettings.FundCat.allValues[row]
         
         default: print("error")
         }
@@ -437,8 +438,8 @@ class PIMutualFundSettings: PISettings, NSCoding {
     
     override func selectedFilterRow() -> Int {
         switch selectedFilter {
-        case .mutualFundFundType: return PIMutualFundSettings.FundType.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundType)!
-        case .mutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundCat)!
+        case .MutualFundFundType: return PIMutualFundSettings.FundType.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundType)!
+        case .MutualFundFundCat: return PIMutualFundSettings.FundCat.allValues.indexOf(PISettingsManager.sharedInstance.mutualFund.fundCat)!
         default: print("error"); return -1
         }
     }
@@ -448,14 +449,14 @@ class PIMutualFundSettings: PISettings, NSCoding {
 class PICurrencySettings: PISettings, NSCoding {
     override var section: Section  {
         get {
-            return .currenciesSection
+            return .CurrenciesSection
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.datePeriod = .oneWeek
+        self.datePeriod = .OneWeek
     }
     
     required convenience init(coder decoder: NSCoder) {
@@ -475,14 +476,14 @@ class PICurrencySettings: PISettings, NSCoding {
 class PIRealEstateSettings: PISettings, NSCoding {
     override var section: Section  {
         get {
-            return .realEstatesSection
+            return .RealEstatesSection
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.datePeriod = .oneYear
+        self.datePeriod = .OneYear
     }
     
     required convenience init(coder decoder: NSCoder) {
@@ -501,14 +502,14 @@ class PIRealEstateSettings: PISettings, NSCoding {
 class PIBondSettings: PISettings, NSCoding {
     override var section: Section  {
         get {
-            return .bondsSection
+            return .BondsSection
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.selectedFilter = .bondOtrasl
+        self.selectedFilter = .BondOtrasl
     }
     
     required convenience init(coder decoder: NSCoder) {
@@ -556,7 +557,7 @@ class PIBondSettings: PISettings, NSCoding {
     
     
     override var filters:[Filters] {
-        get { return [Filters.bondOtrasl, Filters.bondSektor, Filters.bondRating, Filters.bondPeriod, Filters.bondAmor, Filters.bondVidk]}
+        get { return [Filters.BondOtrasl, Filters.BondSektor, Filters.BondRating, Filters.BondPeriod, Filters.BondAmor, Filters.BondVidk]}
         set {}
     }
     
@@ -697,24 +698,24 @@ class PIBondSettings: PISettings, NSCoding {
     
     override func descriptionFilterRow(row: Int) -> String {
         switch selectedFilter {
-            case .bondOtrasl: return PIBondSettings.Otrasl.allValues[row].description
-            case .bondRating: return PIBondSettings.Rating.allValues[row].description
-            case .bondSektor: return PIBondSettings.Sektor.allValues[row].description
-            case .bondPeriod: return PIBondSettings.Period.allValues[row].description
-            case .bondAmor: return PIBondSettings.Amortizac.allValues[row].description
-            case .bondVidk: return PIBondSettings.Vidkupona.allValues[row].description
+            case .BondOtrasl: return PIBondSettings.Otrasl.allValues[row].description
+            case .BondRating: return PIBondSettings.Rating.allValues[row].description
+            case .BondSektor: return PIBondSettings.Sektor.allValues[row].description
+            case .BondPeriod: return PIBondSettings.Period.allValues[row].description
+            case .BondAmor: return PIBondSettings.Amortizac.allValues[row].description
+            case .BondVidk: return PIBondSettings.Vidkupona.allValues[row].description
             default: return "error"
         }
     }
     
     override func countFilterRows() -> Int {
         switch selectedFilter {
-            case .bondOtrasl: return PIBondSettings.Otrasl.allValues.count
-            case .bondRating: return PIBondSettings.Rating.allValues.count
-            case .bondSektor: return PIBondSettings.Sektor.allValues.count
-            case .bondPeriod: return PIBondSettings.Period.allValues.count
-            case .bondAmor: return PIBondSettings.Amortizac.allValues.count
-            case .bondVidk: return PIBondSettings.Vidkupona.allValues.count
+            case .BondOtrasl: return PIBondSettings.Otrasl.allValues.count
+            case .BondRating: return PIBondSettings.Rating.allValues.count
+            case .BondSektor: return PIBondSettings.Sektor.allValues.count
+            case .BondPeriod: return PIBondSettings.Period.allValues.count
+            case .BondAmor: return PIBondSettings.Amortizac.allValues.count
+            case .BondVidk: return PIBondSettings.Vidkupona.allValues.count
             default: print("error"); return -1
 
         }
@@ -722,24 +723,24 @@ class PIBondSettings: PISettings, NSCoding {
     
     override func selectFilterRow(row: Int) {
         switch selectedFilter {
-            case .bondOtrasl: PISettingsManager.sharedInstance.bond.otrasl = PIBondSettings.Otrasl.allValues[row]
-            case .bondRating: PISettingsManager.sharedInstance.bond.rating = PIBondSettings.Rating.allValues[row]
-            case .bondSektor: PISettingsManager.sharedInstance.bond.sektor = PIBondSettings.Sektor.allValues[row]
-            case .bondPeriod: PISettingsManager.sharedInstance.bond.period = PIBondSettings.Period.allValues[row]
-            case .bondAmor: PISettingsManager.sharedInstance.bond.amortizac = PIBondSettings.Amortizac.allValues[row]
-            case .bondVidk: PISettingsManager.sharedInstance.bond.vidkupona = PIBondSettings.Vidkupona.allValues[row]
+            case .BondOtrasl: PISettingsManager.sharedInstance.bond.otrasl = PIBondSettings.Otrasl.allValues[row]
+            case .BondRating: PISettingsManager.sharedInstance.bond.rating = PIBondSettings.Rating.allValues[row]
+            case .BondSektor: PISettingsManager.sharedInstance.bond.sektor = PIBondSettings.Sektor.allValues[row]
+            case .BondPeriod: PISettingsManager.sharedInstance.bond.period = PIBondSettings.Period.allValues[row]
+            case .BondAmor: PISettingsManager.sharedInstance.bond.amortizac = PIBondSettings.Amortizac.allValues[row]
+            case .BondVidk: PISettingsManager.sharedInstance.bond.vidkupona = PIBondSettings.Vidkupona.allValues[row]
             default: print("error")
         }
     }
     
     override func selectedFilterRow() -> Int {
         switch selectedFilter {
-            case .bondOtrasl: return PIBondSettings.Otrasl.allValues.indexOf(PISettingsManager.sharedInstance.bond.otrasl)!
-            case .bondRating: return PIBondSettings.Rating.allValues.indexOf(PISettingsManager.sharedInstance.bond.rating)!
-            case .bondSektor: return PIBondSettings.Sektor.allValues.indexOf(PISettingsManager.sharedInstance.bond.sektor)!
-            case .bondPeriod: return PIBondSettings.Period.allValues.indexOf(PISettingsManager.sharedInstance.bond.period)!
-            case .bondAmor: return PIBondSettings.Amortizac.allValues.indexOf(PISettingsManager.sharedInstance.bond.amortizac)!
-            case .bondVidk: return PIBondSettings.Vidkupona.allValues.indexOf(PISettingsManager.sharedInstance.bond.vidkupona)!
+            case .BondOtrasl: return PIBondSettings.Otrasl.allValues.indexOf(PISettingsManager.sharedInstance.bond.otrasl)!
+            case .BondRating: return PIBondSettings.Rating.allValues.indexOf(PISettingsManager.sharedInstance.bond.rating)!
+            case .BondSektor: return PIBondSettings.Sektor.allValues.indexOf(PISettingsManager.sharedInstance.bond.sektor)!
+            case .BondPeriod: return PIBondSettings.Period.allValues.indexOf(PISettingsManager.sharedInstance.bond.period)!
+            case .BondAmor: return PIBondSettings.Amortizac.allValues.indexOf(PISettingsManager.sharedInstance.bond.amortizac)!
+            case .BondVidk: return PIBondSettings.Vidkupona.allValues.indexOf(PISettingsManager.sharedInstance.bond.vidkupona)!
             default: print("error"); return -1
         }
     }
@@ -749,14 +750,14 @@ class PIBondSettings: PISettings, NSCoding {
 class PIIndicesSettings: PISettings, NSCoding {
     override var section: Section  {
         get {
-            return .indicesSection
+            return .IndicesSection
         }
         set {}
     }
     
     override init() {
         super.init()
-        self.datePeriod = .oneYear
+        self.datePeriod = .OneYear
     }
     
     required convenience init(coder decoder: NSCoder) {
@@ -774,7 +775,7 @@ class PIIndicesSettings: PISettings, NSCoding {
 class PIStockSettings: PISettings, NSCoding {
     override var section: Section  {
         get {
-            return .stocksSection
+            return .StocksSection
         }
         set {}
     }
@@ -801,7 +802,7 @@ class PIStockSettings: PISettings, NSCoding {
     
     
     override var filters:[Filters] {
-        get { return [Filters.stockSpec]}
+        get { return [Filters.StockSpec]}
         set {}
     }
     
@@ -809,88 +810,88 @@ class PIStockSettings: PISettings, NSCoding {
 
     override var sorts:[SortTypes] {
         get {
-            return [SortTypes.changeUp, SortTypes.changeDown, SortTypes.capUp, SortTypes.capDown]
+            return [SortTypes.ChangeUp, SortTypes.ChangeDown, SortTypes.CapUp, SortTypes.CapDown]
         }
         set {}
     }
-    var specialisation:Specialisations = .all
+    var specialisation:Specialisations = .All
     
     
     
     enum Specialisations: String {
-        case all = ""
-        case banks = "Банки"
-        case engineeringIndustry = "Машиностроение"
-        case ferrousMetals = "Металлургия"
-        case oilGaz = "Нефть и газ"
-        case foodIndustry = "Пищевая"
-        case construction = "Строительство"
-        case retail = "Потребительский сектор"
-        case transportation = "Транспорт"
-        case power = "Энергетика"
-        case other = "Прочее"
-        case miningIndustry = "Горнодобывающая"
-        case development = "Девелопмент"
-        case communicationIT = "Телеком медиа IT"
-        case fertilizers = "Удобрения"
-        case pharma = "Фармацевтика"
-        case financialSector = "Финансовый сектор"
-        case chemicalPetrochemicalIndustry = "Химия и нефтехимия"
+        case All = ""
+        case Banks = "Банки"
+        case EngineeringIndustry = "Машиностроение"
+        case FerrousMetals = "Металлургия"
+        case OilGaz = "Нефть и газ"
+        case FoodIndustry = "Пищевая"
+        case Construction = "Строительство"
+        case Retail = "Потребительский сектор"
+        case Transportation = "Транспорт"
+        case Power = "Энергетика"
+        case Other = "Прочее"
+        case MiningIndustry = "Горнодобывающая"
+        case Development = "Девелопмент"
+        case CommunicationIT = "Телеком медиа IT"
+        case Fertilizers = "Удобрения"
+        case Pharma = "Фармацевтика"
+        case FinancialSector = "Финансовый сектор"
+        case ChemicalPetrochemicalIndustry = "Химия и нефтехимия"
         
-        static let allValues = [all, banks, engineeringIndustry, ferrousMetals, oilGaz, foodIndustry, construction, retail, transportation, power, miningIndustry, development, communicationIT, fertilizers, pharma, financialSector, chemicalPetrochemicalIndustry, other]
+        static let allValues = [All, Banks, EngineeringIndustry, FerrousMetals, OilGaz, FoodIndustry, Construction, Retail, Transportation, Power, MiningIndustry, Development, CommunicationIT, Fertilizers, Pharma, FinancialSector, ChemicalPetrochemicalIndustry, Other]
         
       
         var description: String {
             if true {
                 switch self {
-                case .all: return "Ваще все"
-                case .banks: return "Рептилойды"
-                    //            case .lightIndustry: return "Other"
-                case .engineeringIndustry: return "Аннунаки"
-                case .ferrousMetals: return "Иллюминаты"
-                case .oilGaz: return "Масоны"
-                case .foodIndustry: return "Сайентологи"
-                case .construction: return "Каббалисты"
-                    //            case .communication: return "communication"
-                case .retail: return "Восточные тамплиеры"
-                case .transportation: return "Комитет 300"
-                    //            case .finance: return "finance"
-                    //            case .chemicalIndustry: return "chemicalIndustry"
-                case .power: return "Дети Чубайса"
-                case .miningIndustry: return "Чумазики"
-                case .development: return "Прорабы"
-                case .communicationIT: return "Очкастые"
-                case .fertilizers: return "Запах успеха"
-                case .pharma: return "Драгдиллеры"
-                case .financialSector: return "Сионистские мудрецы"
-                case .chemicalPetrochemicalIndustry: return "Варщики"
-                case .other: return "И тому подобная фигня"
+                    case .All: return "Ваще все"
+                    case .Banks: return "Рептилойды"
+                        //            case .lightIndustry: return "Other"
+                    case .EngineeringIndustry: return "Аннунаки"
+                    case .FerrousMetals: return "Иллюминаты"
+                    case .OilGaz: return "Масоны"
+                    case .FoodIndustry: return "Сайентологи"
+                    case .Construction: return "Каббалисты"
+                        //            case .communication: return "communication"
+                    case .Retail: return "Восточные тамплиеры"
+                    case .Transportation: return "Комитет 300"
+                        //            case .finance: return "finance"
+                        //            case .chemicalIndustry: return "chemicalIndustry"
+                    case .Power: return "Дети Чубайса"
+                    case .MiningIndustry: return "Чумазики"
+                    case .Development: return "Прорабы"
+                    case .CommunicationIT: return "Очкастые"
+                    case .Fertilizers: return "Запах успеха"
+                    case .Pharma: return "Драгдиллеры"
+                    case .FinancialSector: return "Сионистские мудрецы"
+                    case .ChemicalPetrochemicalIndustry: return "Варщики"
+                    case .Other: return "И тому подобная фигня"
                 }
 
             } else {
                 switch self {
-                case .all: return "all"
-                case .banks: return "banks"
-                    //            case .lightIndustry: return "Other"
-                case .engineeringIndustry: return "engineeringIndustry"
-                case .ferrousMetals: return "ferrousMetals"
-                case .oilGaz: return "oilGaz"
-                case .foodIndustry: return "foodIndustry"
-                case .construction: return "construction"
-                    //            case .communication: return "communication"
-                case .retail: return "retail"
-                case .transportation: return "transportation"
-                    //            case .finance: return "finance"
-                    //            case .chemicalIndustry: return "chemicalIndustry"
-                case .power: return "power"
-                case .other: return "other"
-                case .miningIndustry: return "miningIndustry"
-                case .development: return "development"
-                case .communicationIT: return "communicationIT"
-                case .fertilizers: return "fertilizers"
-                case .pharma: return "pharma"
-                case .financialSector: return "financialSector"
-                case .chemicalPetrochemicalIndustry: return "chemicalPetrochemicalIndustry"
+                    case .All: return "all"
+                    case .Banks: return "banks"
+                        //            case .lightIndustry: return "Other"
+                    case .EngineeringIndustry: return "engineeringIndustry"
+                    case .FerrousMetals: return "ferrousMetals"
+                    case .OilGaz: return "oilGaz"
+                    case .FoodIndustry: return "foodIndustry"
+                    case .Construction: return "construction"
+                        //            case .communication: return "communication"
+                    case .Retail: return "retail"
+                    case .Transportation: return "transportation"
+                        //            case .finance: return "finance"
+                        //            case .chemicalIndustry: return "chemicalIndustry"
+                    case .Power: return "power"
+                    case .Other: return "other"
+                    case .MiningIndustry: return "miningIndustry"
+                    case .Development: return "development"
+                    case .CommunicationIT: return "communicationIT"
+                    case .Fertilizers: return "fertilizers"
+                    case .Pharma: return "pharma"
+                    case .FinancialSector: return "financialSector"
+                    case .ChemicalPetrochemicalIndustry: return "chemicalPetrochemicalIndustry"
                 }
             }
         }
@@ -915,36 +916,36 @@ class PIStockSettings: PISettings, NSCoding {
 }
 
 enum Periods: Int {
-    case fiveYears
-    case threeYears
-    case oneYear
-    case oneMonth
-    case oneWeek
-    case oneDay
+    case FiveYears
+    case ThreeYears
+    case OneYear
+    case OneMonth
+    case OneWeek
+    case OneDay
 }
 
 enum Section: String {
-    case dashboard
-    case stocksSection
-    case currenciesSection
-    case realEstatesSection
-    case bondsSection
-    case worldIndicesSection
-    case indicesSection
-    case rusIndicesSection
-    case mutualFundsSection
+    case Dashboard
+    case StocksSection
+    case CurrenciesSection
+    case RealEstatesSection
+    case BondsSection
+    case WorldIndicesSection
+    case IndicesSection
+    case RusIndicesSection
+    case MutualFundsSection
     
     var description: String {
         switch self {
-        case .dashboard: return "dashboard"
-        case .stocksSection: return "Stocks"
-        case .currenciesSection: return "Currencies"
-        case .realEstatesSection: return "RealEstate"
-        case .bondsSection: return "Bonds"
-        case .worldIndicesSection: return "WorldIndices"
-        case .rusIndicesSection: return "RusIndices"
-        case .mutualFundsSection: return "MutualFunds"
-        case .indicesSection: return "indices"
+        case .Dashboard: return "dashboard"
+        case .StocksSection: return "Stocks"
+        case .CurrenciesSection: return "Currencies"
+        case .RealEstatesSection: return "RealEstate"
+        case .BondsSection: return "Bonds"
+        case .WorldIndicesSection: return "WorldIndices"
+        case .RusIndicesSection: return "RusIndices"
+        case .MutualFundsSection: return "MutualFunds"
+        case .IndicesSection: return "indices"
         }
     }
     
@@ -954,40 +955,6 @@ enum Section: String {
 
 extension NSDate: Comparable { }
 
-
-
-//struct Set<T: Hashable> {
-//    typealias Element = T
-//    private var contents: [Element: Bool]
-//    
-//    init() {
-//        self.contents = [Element: Bool]()
-//    }
-//    
-//    /// The number of elements in the Set.
-//    var count: Int { return contents.count }
-//    
-//    /// Returns `true` if the Set is empty.
-//    var isEmpty: Bool { return contents.isEmpty }
-//    
-//    /// The elements of the Set as an array.
-//    var elements: [Element] { return Array(self.contents.keys) }
-//    
-//    /// Returns `true` if the Set contains `element`.
-//    func contains(element: Element) -> Bool {
-//        return contents[element] ?? false
-//    }
-//    
-//    /// Add `newElements` to the Set.
-//    mutating func add(newElements: Element...) {
-//        newElements.map { self.contents[$0] = true }
-//    }
-//    
-//    /// Remove `element` from the Set.
-//    mutating func remove(element: Element) -> Element? {
-//        return contents.removeValueForKey(element) != nil ? element : nil
-//    }
-//}
 
 class DashboardContainer {
     var tickers = [DashboardTickerModel]()

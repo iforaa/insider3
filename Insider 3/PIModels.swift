@@ -45,7 +45,7 @@ class DashboardTickerModel:NSObject, TickerModel, NSCoding {
     }
     
     required convenience init(coder decoder: NSCoder) {
-        self.init(key:"", title:"", section:.dashboard, ID:"")
+        self.init(key:"", title:"", section:.Dashboard, ID:"")
         self.Key = decoder.decodeObjectForKey("Key") as! String
         self.Title = decoder.decodeObjectForKey("Title") as! String
         self.section = Section(rawValue: (decoder.decodeObjectForKey("Section") as! String))!
@@ -155,7 +155,7 @@ struct StockTickerModel: Decodable, TickerModel {
     let Pairs: String?
     let MFDTicker: String?
     let InvestFundsTicker: String?
-    var section: Section = .stocksSection
+    var section: Section = .StocksSection
     var Show: Bool = true
     
     
@@ -179,7 +179,7 @@ struct StockTickerModel: Decodable, TickerModel {
         self.Specialisation = "Specialisation" <~~ json
        
         if self.Specialisation == nil {
-            self.Specialisation = .other
+            self.Specialisation = .Other
         }
         
         self.EmitionCount = Decoder.decodeStringToDouble("EmitionCount")(json)
@@ -228,7 +228,7 @@ struct CurrencyTickerModel: Decodable, TickerModel {
     var Change: Float = 0
     var Items: [ItemModel] = []
     var realItems: [CurrencyItemModel]?
-    let section: Section = .currenciesSection
+    let section: Section = .CurrenciesSection
     
     let RusName: String?
     let EngName: String?
@@ -282,7 +282,7 @@ struct RealEstateTickerModel: Decodable, TickerModel {
     var CurrentRate: Float = 0
     var Change: Float = 0
     var ID: String = ""
-    var section: Section = .realEstatesSection
+    var section: Section = .RealEstatesSection
     var Show: Bool = true
     var Items: [ItemModel] = []
     var realItems: [RealEstateItemModel]?
@@ -336,7 +336,7 @@ struct BondTickerModel: Decodable, TickerModel {
     var Change: Float = 0
     var Items: [ItemModel] = []
     var realItems: [BondItemModel]?
-    let section: Section = .bondsSection
+    let section: Section = .BondsSection
     var Show: Bool = true
 
     let Emitent: String?
@@ -417,7 +417,7 @@ struct WorldIndicesTickerModel: Decodable, TickerModel {
     var Key: String = ""
     var CurrentRate: Float = 0
     var Change: Float = 0
-    let section: Section = .worldIndicesSection
+    let section: Section = .WorldIndicesSection
     var Show: Bool = true
     var Items: [ItemModel] = []
     var realItems: [WorldIndicesItemModel]?
@@ -468,7 +468,7 @@ struct RusIndicesTickerModel: Decodable, TickerModel {
     var Key: String = ""
     var CurrentRate: Float = 0
     var Change: Float = 0
-    let section: Section = .rusIndicesSection
+    let section: Section = .RusIndicesSection
     var Show: Bool = true
     var Items: [ItemModel] = []
     var realItems: [RusIndicesItemModel]?
@@ -516,7 +516,7 @@ struct MutualFundTickerModel: Decodable, TickerModel {
     var ID: String = ""
     var Items:[ItemModel] = []
     var realItems: [MutualFundItemModel]?
-    var section: Section = .mutualFundsSection
+    var section: Section = .MutualFundsSection
     var Show: Bool = true
     
     let Fundtype: PIMutualFundSettings.FundType?
