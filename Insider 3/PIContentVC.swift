@@ -10,6 +10,16 @@ import UIKit
 import SnapKit
 
 
+extension PIContentVC: UIPopoverPresentationControllerDelegate {
+    
+    func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
+        let btnDone = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "dismiss")
+        let nav = UINavigationController(rootViewController: controller.presentedViewController)
+        nav.topViewController!.navigationItem.leftBarButtonItem = btnDone
+        return nav
+    }
+}
+
 class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
     
     @IBOutlet weak var selectButton: UIBarButtonItem!
@@ -30,8 +40,23 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
         }
     }
     
-    func openPopover(sourceView: UIView, type: PopoverType) {
+    
+    func openPopover(sourceView: UIView, type _: PopoverType) {
+        let popoverVC: PopoverAlertVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverAlertVC") as! PopoverAlertVC
         
+        //vc.delegate = self
+        //vc.settings = self.sectionManager.settings
+        
+        popoverVC.modalPresentationStyle = UIModalPresentationStyle.Popover
+        popoverVC.popoverPresentationController!.delegate = self
+        popoverVC.popoverPresentationController!.sourceView = sourceView
+        popoverVC.popoverPresentationController!.sourceRect = sourceView.bounds
+        popoverVC.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
+        
+        presentViewController(popoverVC, animated: true, completion: {
+            popoverVC.rate = self.ticker.CurrentRate
+        })
+
     }
     
     override func viewDidLoad() {
@@ -47,7 +72,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
 
         self.view.addSubview(pigraph.contentView)
         
-        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, false)
+        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, false, true)
         datesAndSorts.delegate = self
         self.view.addSubview(datesAndSorts)
         datesAndSorts.snp_makeConstraints { (make) -> Void in
@@ -451,7 +476,9 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
 
     }
     
-    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.None
+    }
 }
 
 

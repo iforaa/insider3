@@ -41,7 +41,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.searchBar.showsCancelButton = true
         self.progressView = PIProgressView(self.view)
         
-        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, true)
+        let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, true, false)
         datesAndSorts.delegate = self
         self.view.addSubview(datesAndSorts)
         datesAndSorts.snp_makeConstraints { (make) -> Void in

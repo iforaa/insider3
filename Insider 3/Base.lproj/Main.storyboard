@@ -62,6 +62,49 @@
             </objects>
             <point key="canvasLocation" x="-899" y="-994"/>
         </scene>
+        <!--Popover AlertVC-->
+        <scene sceneID="PlW-X4-djB">
+            <objects>
+                <viewController storyboardIdentifier="PopoverAlertVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="a8e-qE-aEw" customClass="PopoverAlertVC" customModule="Insider_3" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JZc-5T-HdF"/>
+                        <viewControllerLayoutGuide type="bottom" id="F25-Zl-pGW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hNe-9u-OCr">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="etc-8V-st4">
+                                <rect key="frame" x="18" y="44" width="160" height="31"/>
+                                <connections>
+                                    <action selector="sliderChanged:" destination="a8e-qE-aEw" eventType="valueChanged" id="5ng-G7-tc4"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xvb-CM-kUF">
+                                <rect key="frame" x="20" y="20" width="100" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wya-d7-LEc">
+                                <rect key="frame" x="20" y="82" width="109" height="23"/>
+                                <state key="normal" title="Apply"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="300"/>
+                    <connections>
+                        <outlet property="applyButton" destination="Wya-d7-LEc" id="122-qB-PZq"/>
+                        <outlet property="price" destination="xvb-CM-kUF" id="lCq-88-UHl"/>
+                        <outlet property="slider" destination="etc-8V-st4" id="IQd-ID-Ahi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Cf-oh-umR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-677" y="-1675"/>
+        </scene>
         <!--Popover FilterVC-->
         <scene sceneID="miM-Kr-jv8">
             <objects>
@@ -102,7 +145,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="41" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="auK-tC-Xi6">
                                 <rect key="frame" x="0.0" y="110" width="600" height="490"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="tintColor" patternImage="8D035E08-972A-4D9A-A556-578AE6B5EC3F" colorSpace="pattern"/>
+                                <color key="tintColor" patternImage="4C48BBF6-28D4-4FB2-9923-00D21020E250" colorSpace="pattern"/>
                                 <color key="sectionIndexBackgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Ticker" showsCancelButton="YES" id="nMC-9l-epu">
                                     <rect key="frame" x="0.0" y="64" width="600" height="44"/>
@@ -376,7 +419,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="8D035E08-972A-4D9A-A556-578AE6B5EC3F" width="320" height="460">
+        <image name="4C48BBF6-28D4-4FB2-9923-00D21020E250" width="320" height="460">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

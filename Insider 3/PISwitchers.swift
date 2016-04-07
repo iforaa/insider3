@@ -25,11 +25,61 @@ protocol PIDatesAndSortsViewDelegate {
     func openPopover(sourceView: UIView, type: PopoverType)
 }
 
+class PopoverAlertVC: UIViewController {
+    
+    
+    @IBOutlet weak var price: UILabel!
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var applyButton: UIButton!
+    
+    
+    var rate: Float {
+        get {
+            return self.rate
+        }
+        set(value) {
+            slider.maximumValue = value * 1.5
+            slider.minimumValue = value * 0.5
+            slider.value = value
+            self.sliderChanged(slider)
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.preferredContentSize = CGSizeMake(200, 150)
+        
+        applyButton.addControlEvent(.TouchUpInside, closure: {
+            let alert = UIAlertView()
+            alert.title = "Success"
+            alert.message = "We notify you!"
+            alert.addButtonWithTitle("Ok")
+            alert.show()
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
+        
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+    }
+    
+    @IBAction func sliderChanged(sender: AnyObject) {
+        price.text = String(slider.value)
+    }
+    
+    
+    
+    
+    
+}
+
 class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     let textCellIdentifier = "TextCell"
-    var delegate: PIPopoverSortDelegate! = nil
+    var delegate: PIPopoverSortDelegate?
     var settings: PISettings!
     
     override func viewDidLoad() {
@@ -62,7 +112,7 @@ class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         settings.selectedSort = settings!.sorts[indexPath.row]
-        self.delegate.makeSort()
+        self.delegate!.makeSort()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -196,6 +246,7 @@ class PIDatesAndSortsView: UIView {
     let periodsScreen = UIView()
     let sortsbutton = UIButton()
     let filtersbutton = UIButton()
+    var alertButton = UIButton()
     let fontSize:CGFloat = 14.0
     
     var oneDayPer: UIButton!
@@ -206,7 +257,8 @@ class PIDatesAndSortsView: UIView {
     var fiveYearsPer: UIButton!
     
     
-    init(settings: PISettings, _ sortAndFilterButtonsActivated: Bool) {
+    
+    init(settings: PISettings, _ sortAndFilterButtonsActivated: Bool, _ alertButtonActivated: Bool) {
         super.init(frame: CGRectZero)
         self.settings = settings
         
@@ -268,6 +320,8 @@ class PIDatesAndSortsView: UIView {
             make.top.equalTo(periodsScreen).offset(5)
         }
         
+        
+        
         self.selectedButtonController()
         
         if sortAndFilterButtonsActivated {
@@ -297,6 +351,21 @@ class PIDatesAndSortsView: UIView {
                     make.left.equalTo(self.sortsbutton.snp_right).offset(6)
                     make.top.equalTo(periodsScreen).offset(5)
                 }
+            }
+        }
+        
+        if alertButtonActivated {
+            self.alertButton.setTitle("Alert", forState: UIControlState.Normal)
+            self.alertButton.addControlEvent(.TouchUpInside, closure: {
+                self.delegate.openPopover(self.alertButton, type: .Alert)
+            })
+            self.alertButton.titleLabel?.font = UIFont.systemFontOfSize(fontSize + 2)
+            periodsScreen.addSubview(self.alertButton)
+            
+            
+            self.alertButton.snp_makeConstraints { (make) -> Void in
+                make.left.equalTo(fiveYearsPer.snp_right).offset(6)
+                make.top.equalTo(periodsScreen).offset(5)
             }
         }
     }

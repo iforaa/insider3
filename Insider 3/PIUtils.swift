@@ -14,6 +14,7 @@ import UIKit
 enum PopoverType {
     case Sort
     case Filter
+    case Alert
 }
 
 class PIControlViewFactory {
