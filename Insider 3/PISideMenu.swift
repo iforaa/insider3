@@ -67,31 +67,49 @@ class PISideMenu: UITableViewController {
     
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let vc:ViewController = self.storyboard?.instantiateViewControllerWithIdentifier("contentController") as! ViewController
+        let vc:PISectionVC = self.storyboard?.instantiateViewControllerWithIdentifier("contentController") as! PISectionVC
         
         switch indexPath.row {
             case 0:
                 vc.settingsButton.enabled = false
                 vc.sectionManager = PIDashboardManager()
-                vc.settings = PISettingsManager.sharedInstance.dashboard
+                
+                if let res = PIDashboardSettings().pull() {
+                    vc.settings = res
+                } else {
+                    vc.settings = PIDashboardSettings()
+                }
+                 //PISettingsManager.sharedInstance.dashboard
             case 1:
+                
                 vc.sectionManager = PIStocksManager()
-                vc.settings = PISettingsManager.sharedInstance.stock
+                if let res = PIStockSettings().pull() {
+                    vc.settings = res
+                } else {
+                    vc.settings = PIStockSettings()
+                }
+                 //PISettingsManager.sharedInstance.stock
             case 2:
                 vc.sectionManager = PICurrenciesManager()
-                vc.settings = PISettingsManager.sharedInstance.currency
+//                vc.settings = PICurrencySettings() //PISettingsManager.sharedInstance.currency
+            
+                if let res = PICurrencySettings().pull() {
+                    vc.settings = res
+                } else {
+                    vc.settings = PICurrencySettings()
+            }
             case 3:
                 vc.sectionManager = PIRealEstatesManager()
-                vc.settings = PISettingsManager.sharedInstance.realEstate
+                vc.settings = PIRealEstateSettings() //PISettingsManager.sharedInstance.realEstate
             case 4:
                 vc.sectionManager = PIBondsManager()
-                vc.settings = PISettingsManager.sharedInstance.bond
+                vc.settings = PIBondSettings() //PISettingsManager.sharedInstance.bond
             case 5:
                 vc.sectionManager = PIIndicesManager()
-                vc.settings = PISettingsManager.sharedInstance.indices
+                vc.settings = PIIndicesSettings() //PISettingsManager.sharedInstance.indices
             case 6:
                 vc.sectionManager = PIMutualFundsManager()
-                vc.settings = PISettingsManager.sharedInstance.mutualFund
+                vc.settings = PIMutualFundSettings() //PISettingsManager.sharedInstance.mutualFund
             default:
                 print("rows more then 7")
         }

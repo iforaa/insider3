@@ -11,37 +11,33 @@ import Foundation
 
 
 class PISectionManager {
-    //var section:Section = .stocksSection
-
+    
+    var allTickers: [TickerModel] = []
     var tickers: [TickerModel] = []
     var fetchedTicker: TickerModel?
-    var settings: PISettings!
     var searchFilterText: String?
-    
-    
-    init() {
-
-    }
-    
     var withSettings = true
     var selectedTickerNum:Int!
     var fetchedItems = []
+    
+    
     
     func getManager(ticker: TickerModel) -> PISectionManager {
         return self
     }
     
-    func requestInBackground(completion: (success: Bool) -> Void) {
+    func requestInBackground(settings: PISettings, completion: (success: Bool) -> Void) {
         self.tickers = []
-        PISettingsManager.sharedInstance.settings.tickers = []
+//        PIContainer.sharedInstance.tickers = []
         let dates = (settings.dateFrom(settings.datePeriod),settings.dateTill())
-        PIDataManager().requestSection(self.settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
+        PIDataManager().requestSection(settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
             
-            PISettingsManager.sharedInstance.settings.tickers = result
-            self.tickers = PISettingsManager.sharedInstance.settings.applyExcludeListAtTickers(result)
+//            PIContainer.sharedInstance.tickers = result
+            self.allTickers = result
+            self.tickers = PISettings().applyExcludeListAtTickers(result)
 
-            self.filter()
-            self.sort()
+            self.filter(settings)
+            self.sort(settings)
 
             completion(success: true)
             
@@ -57,26 +53,27 @@ class PISectionManager {
     }
     
     func excludeControl() {
-        self.tickers = self.tickers.filter({item in !PISettingsManager.sharedInstance.settings.excludedTickers.contains(item.ID)})
+        self.tickers = self.tickers.filter({item in !PIContainer.sharedInstance.excludedTickers.contains(item.ID)})
     }
     
     
     func searchFilter(searchText: String) {
         
-        self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+        self.tickers = self.tickers.filter({item in
             if searchText.characters.count == 0 {
                 return true
             } else {
                 return item.Title.lowercaseString.containsString(searchText.lowercaseString)
             }
         })
+        
     }
     
-    func filter() {
+    func filter(_: PISettings) {
         return
     }
     
-    func sort() {
+    func sort(settings: PISettings) {
         switch (settings.selectedSort) {
 
         case .ChangeUp:
@@ -108,14 +105,14 @@ class PISectionManager {
         if withSettings {
             
             if let sft = self.searchFilterText {
-                self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+                self.tickers = self.allTickers.filter({item in
                     return item.Title.lowercaseString.containsString(sft.lowercaseString)
                 })
             }
             return self.tickers.count
         } else {
             if let sft = self.searchFilterText {
-                self.tickers = PISettingsManager.sharedInstance.settings.tickers.filter({item in
+                self.tickers = self.allTickers.filter({item in
                     return item.Title.lowercaseString.containsString(sft.lowercaseString)
                 })
             }
@@ -133,11 +130,11 @@ class PISectionManager {
     }
     
     func switchVisibility(row: Int) {
-        var ticker = PISettingsManager.sharedInstance.settings.tickers[row]
-        if PISettingsManager.sharedInstance.settings.containsInExlideList(ticker.ID) {
-            PISettingsManager.sharedInstance.settings.removeItemFromExludeList(ticker.ID)
+        var ticker = self.allTickers[row]
+        if PISettings().containsInExlideList(ticker.ID) {
+            PISettings().removeItemFromExludeList(ticker.ID)
         } else {
-            PISettingsManager.sharedInstance.settings.addItemToExludeList(ticker.ID)
+            PISettings().addItemToExludeList(ticker.ID)
         }
     }
 
@@ -149,7 +146,7 @@ class PISectionManager {
         return self.tickers[row].CurrentRate
     }
     
-    func change(row:Int) -> Float {
+    func change(row:Int, _: PISettings = PISettings()) -> Float {
         return self.tickers[row].Change
     }
     
@@ -181,16 +178,18 @@ class PISectionManager {
 
 
 class PIDashboardManager:PISectionManager {
-    override func requestInBackground(completion: (success: Bool) -> Void) {
+    
+    
+    override func requestInBackground(settings: PISettings, completion: (success: Bool) -> Void) {
         
         self.tickers = []
         
-        let dt = PISettingsManager.sharedInstance.dashboard.dashboardTickers()
+        let dt = PISettings().dashboardTickers()
         
         if dt.count != 0 {
             for ticker in dt {
                 
-                self.fetchInBackground(ticker, complition: { (fetchedTicker) -> Void in
+                self.fetchInBackground(settings, ticker, complition: { (fetchedTicker) -> Void in
                     self.tickers.append(fetchedTicker)
                     completion(success: true)
                 })
@@ -200,12 +199,12 @@ class PIDashboardManager:PISectionManager {
         }
     }
     
-    func fetchInBackground(ticker: TickerModel,complition: (ticker:TickerModel) -> Void) {
+    func fetchInBackground(settings: PISettings, _ ticker: TickerModel, complition: (ticker:TickerModel) -> Void) {
         
         var dateFrom:NSString,dateTill:NSString
 
-        dateFrom = PISettingsManager.sharedInstance.dashboard.dateFrom(PISettingsManager.sharedInstance.dashboard.datePeriod)
-        dateTill = PISettingsManager.sharedInstance.dashboard.dateTill()
+        dateFrom = settings.dateFrom(settings.datePeriod)
+        dateTill = settings.dateTill()
         
         let dataManager = PIDataManager()
         
@@ -219,13 +218,18 @@ class PIDashboardManager:PISectionManager {
 }
 
 class PIStocksManager:PISectionManager {
-    override func filter() {
-        self.tickers = PISettingsManager.sharedInstance.settings.tickers
+    
+    
+    
+    override func filter(settings: PISettings) {
+        let stockSettings = settings as! PIStockSettings
         
-        if PISettingsManager.sharedInstance.stock.specialisation == .All {
-            self.tickers = PISettingsManager.sharedInstance.settings.tickers
+        self.tickers = self.allTickers
+        
+        if stockSettings.specialisation == .All {
+            self.tickers = self.allTickers
         } else {
-            self.tickers = self.tickers.filter({item in ((item as! StockTickerModel).Specialisation) == PISettingsManager.sharedInstance.stock.specialisation})
+            self.tickers = self.tickers.filter({item in ((item as! StockTickerModel).Specialisation) == stockSettings.specialisation})
         }
         
         
@@ -254,37 +258,40 @@ class PIBondsManager:PISectionManager {
     var dayValue:String {return String(self.Item.DayValue!)}
     var coupon:String {return self.Item.coupon!}
     
-    override func filter() {
-        self.tickers = PISettingsManager.sharedInstance.settings.tickers
-
+    override func filter(settings: PISettings) {
+        
+        let bondSettings = settings as! PIBondSettings
+        
+        self.tickers = self.allTickers
+        
         self.tickers = self.tickers.filter({item in
-            if PISettingsManager.sharedInstance.bond.otrasl != .All {
-                return ((item as! BondTickerModel).Otrasl) == PISettingsManager.sharedInstance.bond.otrasl
+            if bondSettings.otrasl != .All {
+                return ((item as! BondTickerModel).Otrasl) == bondSettings.otrasl
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.sektor != .All {
-                return ((item as! BondTickerModel).Sektor) == PISettingsManager.sharedInstance.bond.sektor
+            if bondSettings.sektor != .All {
+                return ((item as! BondTickerModel).Sektor) == bondSettings.sektor
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.rating != .All {
-                return ((item as! BondTickerModel).Rating) == PISettingsManager.sharedInstance.bond.rating
+            if bondSettings.rating != .All {
+                return ((item as! BondTickerModel).Rating) == bondSettings.rating
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.period != .All {
-                return ((item as! BondTickerModel).Period) == PISettingsManager.sharedInstance.bond.period
+            if bondSettings.period != .All {
+                return ((item as! BondTickerModel).Period) == bondSettings.period
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.amortizac != .All {
-                return ((item as! BondTickerModel).Amorticac) == PISettingsManager.sharedInstance.bond.amortizac
+            if bondSettings.amortizac != .All {
+                return ((item as! BondTickerModel).Amortizac) == bondSettings.amortizac
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.bond.vidkupona != .All {
-                return ((item as! BondTickerModel).Vidkupona) == PISettingsManager.sharedInstance.bond.vidkupona
+            if bondSettings.vidkupona != .All {
+                return ((item as! BondTickerModel).Vidkupona) == bondSettings.vidkupona
             }
             return true
         })
@@ -294,17 +301,17 @@ class PIBondsManager:PISectionManager {
 
 class PIIndicesManager: PISectionManager { // combine WorldIndices with RusIndices
     
-    override func requestInBackground(completion: (success: Bool) -> Void) {
+    override func requestInBackground(settings: PISettings, completion: (success: Bool) -> Void) {
         
         let dates = (settings.dateFrom(settings.datePeriod),settings.dateTill())
         PIDataManager().requestSection(.WorldIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultWorldIndices) -> Void in
             
-            PISettingsManager.sharedInstance.settings.tickers = resultWorldIndices
+            self.allTickers = resultWorldIndices
             self.tickers = resultWorldIndices
             
             PIDataManager().requestSection(.RusIndicesSection, date_from: dates.0, date_till:dates.1, completion: { (resultRusIndices) -> Void in
                 
-                PISettingsManager.sharedInstance.settings.tickers.appendContentsOf(resultRusIndices)
+                self.allTickers.appendContentsOf(resultRusIndices)
                 self.tickers.appendContentsOf(resultRusIndices)
                 completion(success: true)
             })
@@ -331,19 +338,19 @@ class PIMutualFundsManager:PISectionManager {
     var Scha:String {return String(self.Item.Scha!)}
     var URL:String {return String(self.Item.url!)}
 
-    override func requestInBackground(completion: (success: Bool) -> Void) {
+    override func requestInBackground(settings: PISettings, completion: (success: Bool) -> Void) {
         if self.tickers.count == 0 {
             
             self.tickers = []
-            PISettingsManager.sharedInstance.settings.tickers = []
+            self.allTickers = []
             let dates = (settings.dateFrom(.OneMonth),settings.dateTill())
-            PIDataManager().requestSection(self.settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
+            PIDataManager().requestSection(settings.section, date_from: dates.0, date_till:dates.1, completion: { (result) -> Void in
                 
-                PISettingsManager.sharedInstance.settings.tickers = result
-                self.tickers = PISettingsManager.sharedInstance.settings.applyExcludeListAtTickers(result)
+                self.allTickers = result
+                self.tickers = PISettings().applyExcludeListAtTickers(result)
                 
-                self.filter()
-                self.sort()
+                self.filter(settings)
+                self.sort(settings)
                 
                 completion(success: true)
                 
@@ -353,10 +360,10 @@ class PIMutualFundsManager:PISectionManager {
         }
     }
 
-    override func change(row: Int) -> Float {
+    override func change(row: Int, _ settings: PISettings) -> Float {
         if self.tickers[row].Items.first is MutualFundItemModel {
             let item = self.tickers[row].Items.first as! MutualFundItemModel
-            switch self.settings.datePeriod {
+            switch settings.datePeriod {
                 case .OneDay: self.tickers[row].Change = item.Proc_day!
                 case .OneWeek: self.tickers[row].Change = item.Proc_week!
                 case .OneMonth: self.tickers[row].Change = item.Proc_month1!
@@ -369,17 +376,19 @@ class PIMutualFundsManager:PISectionManager {
         return self.tickers[row].Change
     }
     
-    override func filter() {
-        self.tickers = PISettingsManager.sharedInstance.settings.tickers
+    override func filter(settings: PISettings) {
+        
+        let mutualFundSettings = settings as! PIMutualFundSettings
+        self.tickers = self.allTickers
         
         self.tickers = self.tickers.filter({item in
-            if PISettingsManager.sharedInstance.mutualFund.fundType != .All {
-                return ((item as! MutualFundTickerModel).Fundtype) == PISettingsManager.sharedInstance.mutualFund.fundType
+            if mutualFundSettings.fundType != .All {
+                return ((item as! MutualFundTickerModel).Fundtype) == mutualFundSettings.fundType
             }
             return true
         }).filter({item in
-            if PISettingsManager.sharedInstance.mutualFund.fundCat != .All {
-                return ((item as! MutualFundTickerModel).Fundcat) == PISettingsManager.sharedInstance.mutualFund.fundCat
+            if mutualFundSettings.fundCat != .All {
+                return ((item as! MutualFundTickerModel).Fundcat) == mutualFundSettings.fundCat
             }
             return true
         })

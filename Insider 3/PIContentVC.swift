@@ -41,35 +41,15 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
     }
     
     
-    func openPopover(sourceView: UIView, type _: PopoverType) {
-        let popoverVC: PopoverAlertVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverAlertVC") as! PopoverAlertVC
-        
-        //vc.delegate = self
-        //vc.settings = self.sectionManager.settings
-        
-        popoverVC.modalPresentationStyle = UIModalPresentationStyle.Popover
-        popoverVC.popoverPresentationController!.delegate = self
-        popoverVC.popoverPresentationController!.sourceView = sourceView
-        popoverVC.popoverPresentationController!.sourceRect = sourceView.bounds
-        popoverVC.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
-        
-        presentViewController(popoverVC, animated: true, completion: {
-            popoverVC.rate = self.ticker.CurrentRate
-        })
-
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    func placeViews() {
         self.title = "Details"
-   
-        if PISettingsManager.sharedInstance.dashboard.containsInDashboard(self.ticker) {
+        
+        if PISettings().containsInDashboard(self.ticker) {
             self.navigationItem.rightBarButtonItem?.title = "Remove"
         } else {
             self.navigationItem.rightBarButtonItem?.title = "To Dashboard"
         }
-
+        
         self.view.addSubview(pigraph.contentView)
         
         let datesAndSorts:PIDatesAndSortsView = PIDatesAndSortsView(settings: self.settings, false, true)
@@ -83,18 +63,18 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
         }
         
         
-    
+        
         let rateLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.RateLabel,value: "\(self.manager.currentRate(self.manager.selectedTickerNum))")
         
         self.view.addSubview(rateLabels.0)
         self.view.addSubview(rateLabels.1)
-
+        
         changeLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.ChangeLabel,value: "\(self.manager.change(self.manager.selectedTickerNum))%")
         
         self.view.addSubview(changeLabels.0)
         self.view.addSubview(changeLabels.1)
-
-
+        
+        
         switch self.ticker.section {
             
             
@@ -126,7 +106,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             let mutualFundsManager = PIMutualFundsManager()
             mutualFundsManager.tickers = self.manager.tickers
             mutualFundsManager.fetchedTicker = self.manager.fetchedTicker
-            mutualFundsManager.settings = self.manager.settings
+            //            mutualFundsManager.settings = self.manager.settings
             mutualFundsManager.selectedTickerNum = self.manager.selectedTickerNum
             
             
@@ -180,16 +160,16 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
             self.view.addSubview(schaLabels.0)
             self.view.addSubview(schaLabels.1)
             
-//            let urlLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.url, value: mutualFundsManager.URL)
-//            let linkTextView = UITextView()
-//            linkTextView.dataDetectorTypes = .Link
-//            linkTextView.editable = false
-//            linkTextView.text = urlLabels.1.text
-//            
-//            
-//            self.view.addSubview(urlLabels.0)
-//            self.view.addSubview(linkTextView)
-//            
+            //            let urlLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.url, value: mutualFundsManager.URL)
+            //            let linkTextView = UITextView()
+            //            linkTextView.dataDetectorTypes = .Link
+            //            linkTextView.editable = false
+            //            linkTextView.text = urlLabels.1.text
+            //
+            //
+            //            self.view.addSubview(urlLabels.0)
+            //            self.view.addSubview(linkTextView)
+            //
             
             fundnameLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(changeLabels.0.snp_bottom).offset(10)
@@ -221,7 +201,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(fundtypeLabels.0)
                 make.leading.equalTo(fundtypeLabels.0.snp_trailing).offset(10)
             }
-
+            
             
             fundcatLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(fundtypeLabels.0.snp_bottom).offset(10)
@@ -232,7 +212,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(fundcatLabels.0)
                 make.leading.equalTo(fundcatLabels.0.snp_trailing).offset(10)
             }
-
+            
             
             registrationdateLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(fundcatLabels.0.snp_bottom).offset(10)
@@ -253,7 +233,7 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(startformirdateLabels.0)
                 make.leading.equalTo(startformirdateLabels.0.snp_trailing).offset(10)
             }
-
+            
             endformirdateLabels.0.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(startformirdateLabels.0.snp_bottom).offset(10)
                 make.leading.equalTo(self.view).offset(10)
@@ -294,22 +274,22 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.leading.equalTo(schaLabels.0.snp_trailing).offset(10)
             }
             
-//            urlLabels.0.snp_makeConstraints { (make) -> Void in
-//                make.top.equalTo(schaLabels.0.snp_bottom).offset(10)
-//                make.leading.equalTo(self.view).offset(10)
-//            }
-//            
-//            linkTextView.snp_makeConstraints { (make) -> Void in
-//                make.top.equalTo(urlLabels.0)
-//                make.left.equalTo(urlLabels.0.snp_right).offset(10)
-//                make.width.equalTo(200)
-//                make.height.equalTo(40)
-//            }
-
-
+            //            urlLabels.0.snp_makeConstraints { (make) -> Void in
+            //                make.top.equalTo(schaLabels.0.snp_bottom).offset(10)
+            //                make.leading.equalTo(self.view).offset(10)
+            //            }
+            //
+            //            linkTextView.snp_makeConstraints { (make) -> Void in
+            //                make.top.equalTo(urlLabels.0)
+            //                make.left.equalTo(urlLabels.0.snp_right).offset(10)
+            //                make.width.equalTo(200)
+            //                make.height.equalTo(40)
+            //            }
+            
+            
             
         case .BondsSection:
-
+            
             datesAndSorts.deactivate()
             
             rateLabels.0.snp_makeConstraints { (make) -> Void in
@@ -331,14 +311,14 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.top.equalTo(rateLabels.0.snp_bottom).offset(10)
                 make.leading.equalTo(changeLabels.0.snp_trailing).offset(10)
             }
-
+            
             
             let bondManager = PIBondsManager()
             bondManager.tickers = self.manager.tickers
             bondManager.fetchedTicker = self.manager.fetchedTicker
-            bondManager.settings = self.manager.settings
+            //            bondManager.settings = self.manager.settings
             bondManager.selectedTickerNum = self.manager.selectedTickerNum
-
+            
             
             let emitentLabels = PIControlViewFactory.NewLabelsWithTextAndValue(.EmitentLabel,value:"emitent not found")
             
@@ -447,10 +427,30 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
                 make.leading.equalTo(changeLabels.0.snp_trailing).offset(10)
             }
         }
+
+    }
+    
+    
+    func openPopover(sourceView: UIView, type _: PopoverType) {
+        let popoverVC: PopoverAlertVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverAlertVC") as! PopoverAlertVC
         
-        self.request()
+        //vc.delegate = self
+        //vc.settings = self.sectionManager.settings
         
+        popoverVC.modalPresentationStyle = UIModalPresentationStyle.Popover
+        popoverVC.popoverPresentationController!.delegate = self
+        popoverVC.popoverPresentationController!.sourceView = sourceView
+        popoverVC.popoverPresentationController!.sourceRect = sourceView.bounds
+        popoverVC.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
         
+        presentViewController(popoverVC, animated: true, completion: {
+            popoverVC.rate = self.ticker.CurrentRate
+        })
+
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
     }
     
@@ -465,12 +465,12 @@ class PIContentVC: UIViewController, PIDatesAndSortsViewDelegate {
     }
     
     @IBAction func selectTapped(sender: UIBarButtonItem) {
-        if PISettingsManager.sharedInstance.dashboard.containsInDashboard(self.ticker) {
-            PISettingsManager.sharedInstance.dashboard.removeFromDashboard(self.ticker)
+        if PISettings().containsInDashboard(self.ticker) {
+            PISettings().removeFromDashboard(self.ticker)
             self.navigationItem.rightBarButtonItem?.title = "To Dashboard"
         } else {
             
-            PISettingsManager.sharedInstance.dashboard.addToDashboard(self.ticker)
+            PISettings().addToDashboard(self.ticker)
             self.navigationItem.rightBarButtonItem?.title = "Remove"
         }
 

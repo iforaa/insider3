@@ -38,14 +38,15 @@ class PIVisibleSettingsVC: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sectionManager.count()
+        return self.sectionManager.allTickers.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(itemCellIdentifier, forIndexPath: indexPath)
-        cell.textLabel?.text = self.sectionManager.ticker(indexPath.row)
+        cell.textLabel?.text = self.sectionManager.allTickers[indexPath.row].Title
         
-        if PISettingsManager.sharedInstance.settings.containsInExlideList(self.sectionManager.getTicker(indexPath.row).Title) {
+        
+        if PISettings().containsInExlideList(self.sectionManager.allTickers[indexPath.row].ID) {
         //if self.sectionManager.getTicker(indexPath.row).Show == true {
             cell.accessoryType = .None
         } else {

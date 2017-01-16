@@ -9,7 +9,7 @@
 import UIKit
 
 
-extension ViewController: UIPopoverPresentationControllerDelegate {
+extension PISectionVC: UIPopoverPresentationControllerDelegate {
     
     func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
         let btnDone = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "dismiss")
@@ -19,13 +19,14 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
+class PISectionVC: UIViewController, UITableViewDataSource, UITableViewDelegate, PIDatesAndSortsViewDelegate, PIPopoverSortDelegate, PIPopoverFilterDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var settings: PISettings = PISettingsManager.sharedInstance.stock
+    var settings: PISettings = PIStockSettings()
+    //PISettingsManager.sharedInstance.stock
     var sectionManager: PISectionManager = PIStocksManager()
-    var progressView:PIProgressView?
+    var progressView: PIProgressView?
 
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
@@ -33,7 +34,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
     let textCellIdentifier = "TextCell"
 
-    
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -50,15 +50,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.searchBar.snp_top)
         }
-        
-        
-        
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        self.settings.commit()
+    }
     
     func request() {
         self.progressView?.show()
-        self.sectionManager.requestInBackground() { (success) -> Void in
+        self.sectionManager.requestInBackground(self.settings) { (success) -> Void in
             if (success) {
                 self.progressView?.hide()
                 self.sectionManager.excludeControl()
@@ -71,7 +71,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     
     override func viewWillAppear(animated: Bool) {
-        self.sectionManager.settings = self.settings
         self.request()
         
     }
@@ -96,12 +95,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func makeSort() {
-        self.sectionManager.sort()
+        self.sectionManager.sort(self.settings)
         self.tableView.reloadData()
     }
     
     func makeFilter() {
-        self.sectionManager.filter()
+        self.sectionManager.filter(self.settings)
         self.tableView.reloadData()
     }
     
@@ -113,7 +112,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             popoverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("PopoverVCSort")
             let vc:PopoverSortVC = popoverVC as! PopoverSortVC
             vc.delegate = self
-            vc.settings = self.sectionManager.settings
+            vc.settings = self.settings
             
             vc.modalPresentationStyle = UIModalPresentationStyle.Popover
             vc.popoverPresentationController!.delegate = self
@@ -131,7 +130,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             vc.popoverPresentationController!.sourceRect = sourceView.bounds
             vc.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Up
             vc.delegate = self
-            vc.settings = self.sectionManager.settings
+            vc.settings = self.settings
             presentViewController(vc, animated: true, completion: nil)
             
             
@@ -182,6 +181,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.sectionManager.selectedTickerNum = indexPath.row
         picontentVC.ticker = self.sectionManager.getSelectedTicker()
         picontentVC.manager = self.sectionManager
+        let contentSettings = PISettings()
+        contentSettings.datePeriod = self.settings.datePeriod
+        picontentVC.settings = contentSettings
+        
+        picontentVC.placeViews()
+        picontentVC.request()
+        
         
         self.navigationController?.pushViewController(picontentVC, animated: true)
     }
@@ -214,8 +220,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         searchBar.text = ""
         searchBar.resignFirstResponder()
         self.sectionManager.searchFilterText = nil
-        self.sectionManager.sort()
-        self.sectionManager.filter()
+        self.sectionManager.sort(self.settings)
+        self.sectionManager.filter(self.settings)
         self.tableView.reloadData()
     }
 }

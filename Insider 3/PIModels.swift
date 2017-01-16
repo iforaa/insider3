@@ -347,7 +347,7 @@ struct BondTickerModel: Decodable, TickerModel {
     var Rating: PIBondSettings.Rating?
     var Sektor: PIBondSettings.Sektor?
     var Period: PIBondSettings.Period?
-    var Amorticac: PIBondSettings.Amortizac?
+    var Amortizac: PIBondSettings.Amortizac?
     var Vidkupona: PIBondSettings.Vidkupona?
     
     init?(json: JSON) {
@@ -371,8 +371,8 @@ struct BondTickerModel: Decodable, TickerModel {
         self.Rating = "Rating" <~~ json
         self.Sektor = "Sektor" <~~ json
         self.Period = "Period" <~~ json
-        self.Amorticac = "Amorticac" <~~ json
-        self.Vidkupona = "Vidkupona" <~~ json
+        self.Amortizac = "Amortizac" <~~ json
+        self.Vidkupona = "VidKupona" <~~ json
 
     
         

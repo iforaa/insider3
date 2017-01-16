@@ -71,9 +71,9 @@ class PIGraph:ChartViewDelegate {
     }
     
     
-    func setDataCount(manager:PISectionManager) {
+    func setDataCount(sectionManager:PISectionManager) {
         
-        if (manager.settings.section == .BondsSection) {
+        if (sectionManager is PIBondsManager) {
             return
         }
 
@@ -83,20 +83,20 @@ class PIGraph:ChartViewDelegate {
         
         var xVals:[NSDate] = []
         
-        for i in 0..<manager.fetchedTickerItemsCount() {
-            let val:NSDate = manager.fetchedDate(i)
+        for i in 0..<sectionManager.fetchedTickerItemsCount() {
+            let val:NSDate = sectionManager.fetchedDate(i)
             xVals.append(val)
         }
         
         var yVals: [ChartDataEntry] = []
-        for i in 0..<manager.fetchedTickerItemsCount()
+        for i in 0..<sectionManager.fetchedTickerItemsCount()
         {
-            let val:Double = Double(manager.fetchedRate(i))
+            let val:Double = Double(sectionManager.fetchedRate(i))
             yVals.append(ChartDataEntry.init(value: val, xIndex: i))
         }
         
         
-        let set1:LineChartDataSet = LineChartDataSet.init(yVals: yVals, label: manager.fetchedTitle())
+        let set1:LineChartDataSet = LineChartDataSet.init(yVals: yVals, label: sectionManager.fetchedTitle())
         set1.drawCubicEnabled = true
         set1.drawCirclesEnabled = false
         set1.cubicIntensity = 0.2

@@ -83,7 +83,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xvb-CM-kUF">
                                 <rect key="frame" x="20" y="20" width="100" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wya-d7-LEc">
@@ -133,7 +133,7 @@
         <!--View Controller-->
         <scene sceneID="MzO-Dl-bSX">
             <objects>
-                <viewController storyboardIdentifier="contentController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4jk-WB-edZ" customClass="ViewController" customModule="Insider_3" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="contentController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4jk-WB-edZ" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FUu-cY-W5a"/>
                         <viewControllerLayoutGuide type="bottom" id="H7v-wt-e2H"/>
@@ -145,7 +145,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="41" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="auK-tC-Xi6">
                                 <rect key="frame" x="0.0" y="110" width="600" height="490"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="tintColor" patternImage="4C48BBF6-28D4-4FB2-9923-00D21020E250" colorSpace="pattern"/>
+                                <color key="tintColor" patternImage="DA99BF0C-E3B4-4208-95BA-213499938A0C" colorSpace="pattern"/>
                                 <color key="sectionIndexBackgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Ticker" showsCancelButton="YES" id="nMC-9l-epu">
                                     <rect key="frame" x="0.0" y="64" width="600" height="44"/>
@@ -419,7 +419,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="4C48BBF6-28D4-4FB2-9923-00D21020E250" width="320" height="460">
+        <image name="DA99BF0C-E3B4-4208-95BA-213499938A0C" width="320" height="460">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

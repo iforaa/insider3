@@ -52,13 +52,11 @@ class PopoverAlertVC: UIViewController {
         applyButton.addControlEvent(.TouchUpInside, closure: {
             let alert = UIAlertView()
             alert.title = "Success"
-            alert.message = "We notify you!"
+            alert.message = "We will notify you!"
             alert.addButtonWithTitle("Ok")
             alert.show()
             self.dismissViewControllerAnimated(true, completion: nil)
         })
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -68,11 +66,6 @@ class PopoverAlertVC: UIViewController {
     @IBAction func sliderChanged(sender: AnyObject) {
         price.text = String(slider.value)
     }
-    
-    
-    
-    
-    
 }
 
 class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -104,7 +97,11 @@ class PopoverSortVC: UIViewController, UITableViewDataSource, UITableViewDelegat
         let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath)
         
         cell.textLabel?.text = self.settings.sorts[indexPath.row].description
-
+        if self.settings.selectedSort == self.settings.sorts[indexPath.row] {
+            cell.accessoryType = .Checkmark
+        } else {
+            cell.accessoryType = .None
+        }
         
         return cell
     }
@@ -131,7 +128,6 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         if showPicker == true || self.settings?.filters.count == 1 { //в случае если фильтр в секции всего один, то сразу показываем пикер
             self.preferredContentSize = CGSizeMake(270, 150)
@@ -191,7 +187,17 @@ class PopoverFilterVC: UIViewController,UIPickerViewDataSource, UIPickerViewDele
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath)
         
-        cell.textLabel?.text = self.settings?.filters[indexPath.row].description
+        if let settings = self.settings {
+            cell.textLabel?.text = settings.filters[indexPath.row].description
+            
+            if settings.usingFilters.contains(settings.filters[indexPath.row]) {
+                cell.accessoryType = .Checkmark
+            } else {
+                cell.accessoryType = .None
+            }
+        }
+        
+        
         return cell
     }
     
